@@ -1,0 +1,338 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+/* Hero Section */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-8);
+  overflow: hidden;
+}
+
+.heroBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -3;
+  /* subtle zoom animation */
+  animation: bgZoom 20s infinite alternate;
+}
+
+@keyframes bgZoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.05); }
+}
+
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 45%, rgba(255, 255, 255, 0.1) 100%);
+  z-index: -2;
+}
+
+/* Floating animated orbs to give flow - toned down for minimalism */
+.heroGlow1, .heroGlow2 {
+  display: none;
+}
+
+.heroContent {
+  max-width: 800px;
+  animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.heroSubtitle {
+  color: var(--accent-secondary);
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-2);
+  display: block;
+}
+
+.heroTitle {
+  margin-bottom: var(--spacing-4);
+}
+
+.heroDesc {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-6);
+  max-width: 600px;
+}
+
+.heroButtons {
+  display: flex;
+  gap: var(--spacing-4);
+}
+
+/* Stats Bar */
+.statsBar {
+  display: flex;
+  justify-content: space-around;
+  padding: var(--spacing-6) var(--spacing-8);
+  background: var(--bg-surface);
+  border-top: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
+  position: relative;
+  z-index: 10;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statValue {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+.statLabel {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Courses Section */
+.coursesSection {
+  padding: var(--spacing-12) var(--spacing-8);
+}
+
+.sectionHeader {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto var(--spacing-8);
+}
+
+.sectionTitle {
+  color: var(--text-primary);
+}
+
+.sectionSubtitle {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+}
+
+.coursesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--spacing-6);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.courseCard {
+  background: var(--card-glass);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius-xl);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.courseCard:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-secondary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.courseCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-secondary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.courseCard:hover::before {
+  opacity: 1;
+}
+
+.courseImageContainer {
+  height: 200px;
+  background: var(--bg-surface-hover);
+  position: relative;
+  overflow: hidden;
+}
+
+.courseBadge {
+  position: absolute;
+  top: var(--spacing-3);
+  right: var(--spacing-3);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--card-border);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 2;
+}
+
+.courseBadgePopular {
+  position: absolute;
+  top: var(--spacing-3);
+  right: var(--spacing-3);
+  background: var(--accent-primary);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  z-index: 2;
+}
+
+/* Abstract shapes for course thumbnails - removed for minimalism */
+.shape1, .shape2, .shape3 {
+  display: none;
+}
+
+.courseContent {
+  padding: var(--spacing-5);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.courseTitle {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-2);
+}
+
+.courseDesc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: var(--spacing-4);
+  flex-grow: 1;
+}
+
+.courseMeta {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--card-border);
+  padding-top: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.metaLabel {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.metaValue {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.btnFull {
+  width: 100%;
+  text-align: center;
+  display: block;
+}
+
+/* Features */
+.featuresSection {
+  padding: var(--spacing-12) var(--spacing-8);
+  background: var(--bg-surface);
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-6);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featureCard {
+  text-align: center;
+  padding: var(--spacing-6);
+  background: var(--card-glass);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius-lg);
+  transition: transform 0.3s ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-5px);
+}
+
+.featureIcon {
+  width: 64px;
+  height: 64px;
+  background: transparent;
+  border: 1px solid var(--card-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--spacing-4);
+  font-size: 1.5rem;
+  color: var(--accent-secondary);
+}
+
+.featureIconPrimary {
+  border-color: var(--card-border);
+  color: var(--accent-primary);
+}
+
+.featureTitle {
+  margin-bottom: var(--spacing-2);
+}
+
+.featureDesc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+
+
+@media (max-width: 768px) {
+  .heroContent {
+    padding-top: calc(var(--spacing-12) * 2);
+  }
+  
+  .statsBar {
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+}

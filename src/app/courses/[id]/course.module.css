@@ -1,0 +1,164 @@
+.headerSpacer {
+  height: 100px;
+}
+
+.courseContainer {
+  min-height: 100vh;
+  padding: 0 var(--spacing-8) var(--spacing-12);
+  display: flex;
+  flex-direction: column;
+}
+
+.heroBanner {
+  position: relative;
+  background: var(--bg-surface);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-12) var(--spacing-8);
+  margin-bottom: var(--spacing-8);
+  text-align: center;
+  overflow: hidden;
+}
+
+.glowBg {
+  display: none;
+}
+
+.heroBanner h1 {
+  position: relative;
+  z-index: 1;
+  color: var(--accent-primary);
+  margin-bottom: var(--spacing-4);
+}
+
+.heroDesc {
+  position: relative;
+  z-index: 1;
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 800px;
+  margin: 0 auto var(--spacing-6);
+}
+
+.metaRow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+}
+
+.metaBadge {
+  background: var(--card-glass);
+  border: 1px solid var(--card-border);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-8);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.mainContent h2, .mainContent h3 {
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-4);
+}
+
+.mainContent p {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+}
+
+.moduleList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.moduleItem {
+  background: var(--card-glass);
+  border: 1px solid var(--card-border);
+  padding: var(--spacing-4);
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: transform 0.2s ease;
+}
+
+.moduleItem:hover {
+  transform: translateX(5px);
+  border-color: var(--accent-secondary);
+}
+
+.moduleNumber {
+  background: var(--text-primary);
+  color: #000;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.sidebar {
+  position: sticky;
+  top: 120px;
+}
+
+.pricingCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--card-border);
+  padding: var(--spacing-6);
+  border-radius: var(--border-radius-xl);
+  text-align: center;
+}
+
+.price {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--accent-secondary);
+  margin: var(--spacing-4) 0 var(--spacing-2);
+}
+
+.priceSub {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: var(--spacing-6);
+}
+
+.enrollBtn {
+  width: 100%;
+  display: block;
+}
+
+.guarantee {
+  margin-top: var(--spacing-4);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 900px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar {
+    position: static;
+  }
+}
