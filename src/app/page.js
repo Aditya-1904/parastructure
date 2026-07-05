@@ -41,7 +41,7 @@ export default function Home() {
             demanded by L&T, AECOM, and top NHAI consultancies.
           </p>
           <div className={styles.heroButtons}>
-            <Link href="/#programs" className="btnGold">See All Programs</Link>
+            <Link href="/#programs" className="btnGold">{courses.length === 1 ? 'View Program' : 'See All Programs'}</Link>
             <Link href="/contact" className="btnSecondary">Get the Syllabus</Link>
           </div>
 
@@ -103,9 +103,12 @@ export default function Home() {
       <section id="programs" className={styles.programsSection}>
         <div className={styles.sectionHeader}>
           <span className={styles.sectionEyebrow}>What We Teach</span>
-          <h2 className={styles.sectionTitle}>Three Programs.<br/>One Clear Goal — Engineering Mastery.</h2>
+          <h2 className={styles.sectionTitle}>
+            {courses.length === 1 ? 'Our Flagship Program.' : `${courses.length} Programs.`}<br/>
+            One Clear Goal — Engineering Mastery.
+          </h2>
           <p className={styles.sectionSubtitle}>
-            Each program is built around one niche, taught live by engineers who are actively working
+            {courses.length === 1 ? 'This program is' : 'Each program is'} built around one niche, taught live by engineers who are actively working
             on the projects you aspire to work on.
           </p>
         </div>

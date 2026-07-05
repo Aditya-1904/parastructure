@@ -8,14 +8,14 @@ export const CHATBOT_RULES = {
     ]
   },
   programs: {
-    message: "We offer three highly specialized live cohorts: RCC Bridge Design, Steel Bridge Design, and PSC Bridge Design. All programs focus on real project data and industry-standard tools like MIDAS Civil.",
+    message: "We offer highly specialized live cohorts: RCC Bridge Design, Steel Bridge Design, and PSC Bridge Design. All programs focus on real project data and industry-standard tools like MIDAS Civil.",
     options: [
       { label: "Which one is right for me?", next: "which_program" },
       { label: "Go back", next: "start" }
     ]
   },
   which_program: {
-    message: "If you're starting out, RCC is the most demanded skill. If you want to master complex infrastructure, PSC is incredible. Steel is niche and highly paid. I recommend checking the curriculum on each course page!",
+    message: "I recommend checking the curriculum on our programs page! We tailor our training to the most demanded skills in infrastructure engineering.",
     options: [
       { label: "Go back", next: "start" }
     ]

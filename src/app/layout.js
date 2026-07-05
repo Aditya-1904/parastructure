@@ -19,11 +19,11 @@ const inter = Inter({
 export const metadata = {
   title: "Parastructure | Master Bridge Engineering",
   description:
-    "India's most advanced cohort-based bridge engineering program. Learn RCC, Steel, and PSC Bridge design from industry leaders. Live sessions, real projects, and professional portfolio building.",
+    "India's most advanced cohort-based bridge engineering program. Learn advanced Bridge design from industry leaders. Live sessions, real projects, and professional portfolio building.",
   keywords: [
     "bridge engineering course",
     "structural engineering online",
-    "RCC bridge design",
+    "advanced bridge design",
     "MIDAS Civil training",
     "infrastructure engineering India",
   ],

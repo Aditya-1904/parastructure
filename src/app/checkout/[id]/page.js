@@ -10,10 +10,11 @@ export default function CheckoutPage({ params }) {
   const { id: courseId } = use(params);
   const course = getCourse(courseId);
 
-  const [form, setForm] = useState({ name: '', email: '', phone: '', linkedin: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', linkedin: '', utr: '' });
   const [loading, setLoading] = useState(false);
   const [showFallback, setShowFallback] = useState(false);
   const [errors, setErrors] = useState({});
+  const [paymentMethod, setPaymentMethod] = useState('online');
 
   if (!course) {
     return (
@@ -31,6 +32,7 @@ export default function CheckoutPage({ params }) {
     if (!form.name.trim()) errs.name = 'Full name is required.';
     if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) errs.email = 'A valid email is required.';
     if (!form.phone.trim() || !/^\+?[0-9]{10,13}$/.test(form.phone.replace(/\s/g, ''))) errs.phone = 'Enter a valid 10-digit phone number.';
+    if (paymentMethod === 'bank' && !form.utr.trim()) errs.utr = 'Transaction ID (UTR) is required.';
     return errs;
   }
 
@@ -43,6 +45,15 @@ export default function CheckoutPage({ params }) {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
+
+    if (paymentMethod === 'bank') {
+      setLoading(true);
+      // Simulate API call for bank transfer
+      setTimeout(() => {
+        window.location.href = `/contact?enrolled=1&method=bank`;
+      }, 1500);
+      return;
+    }
 
     if (!PAYMENT_CONFIG.isLive) {
       setShowFallback(true);
@@ -150,6 +161,23 @@ export default function CheckoutPage({ params }) {
             You're one step away from joining India's most advanced bridge engineering cohort.
           </p>
 
+          <div className={styles.paymentToggle}>
+            <button 
+              type="button" 
+              className={`${styles.toggleBtn} ${paymentMethod === 'online' ? styles.toggleBtnActive : ''}`}
+              onClick={() => { setPaymentMethod('online'); setErrors({}); }}
+            >
+              Pay Online Instantly
+            </button>
+            <button 
+              type="button" 
+              className={`${styles.toggleBtn} ${paymentMethod === 'bank' ? styles.toggleBtnActive : ''}`}
+              onClick={() => { setPaymentMethod('bank'); setErrors({}); }}
+            >
+              Direct Bank Transfer
+            </button>
+          </div>
+
           <form className={styles.form} onSubmit={handlePay} noValidate>
             <div className={styles.formGroup}>
               <label htmlFor="name" className={styles.label}>Full Name *</label>
@@ -208,6 +236,44 @@ export default function CheckoutPage({ params }) {
               />
             </div>
 
+            {paymentMethod === 'bank' && (
+              <>
+                <div className={styles.bankDetailsBox}>
+                  <h3>Company Bank Details</h3>
+                  <div className={styles.bankRow}>
+                    <span className={styles.bankLabel}>Beneficiary Name</span>
+                    <span className={styles.bankValue}>Parastructure Pvt. Ltd.</span>
+                  </div>
+                  <div className={styles.bankRow}>
+                    <span className={styles.bankLabel}>Account Number</span>
+                    <span className={styles.bankValue}>1234 5678 9012</span>
+                  </div>
+                  <div className={styles.bankRow}>
+                    <span className={styles.bankLabel}>IFSC Code</span>
+                    <span className={styles.bankValue}>HDFC0001234</span>
+                  </div>
+                  <div className={styles.bankRow}>
+                    <span className={styles.bankLabel}>Bank Name</span>
+                    <span className={styles.bankValue}>HDFC Bank</span>
+                  </div>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="utr" className={styles.label}>Transaction ID (UTR) *</label>
+                  <input
+                    id="utr"
+                    name="utr"
+                    type="text"
+                    className={`${styles.input} ${errors.utr ? styles.inputError : ''}`}
+                    placeholder="e.g. UTR1234567890"
+                    value={form.utr}
+                    onChange={handleChange}
+                  />
+                  {errors.utr && <span className={styles.errorMsg}>{errors.utr}</span>}
+                </div>
+              </>
+            )}
+
             <div className={styles.payButton}>
               <button
                 type="submit"
@@ -216,10 +282,16 @@ export default function CheckoutPage({ params }) {
                 disabled={loading}
                 id="pay-now-btn"
               >
-                {loading ? 'Opening Payment...' : `Pay ${formatPrice(course.price)} Securely`}
+                {loading 
+                  ? 'Processing...' 
+                  : paymentMethod === 'bank' 
+                    ? `Submit Details for ${formatPrice(course.price)}` 
+                    : `Pay ${formatPrice(course.price)} Securely`}
               </button>
               <p className={styles.payNote}>
-                🔒 Secured by Razorpay · UPI · Cards · Net Banking · EMI
+                {paymentMethod === 'bank' 
+                  ? '🔒 We will verify your transaction manually and enroll you within 24 hours.' 
+                  : '🔒 Secured by Razorpay · UPI · Cards · Net Banking · EMI'}
               </p>
             </div>
           </form>

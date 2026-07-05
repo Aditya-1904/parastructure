@@ -96,6 +96,7 @@ export const FAQS = [
 const courses = {
   rcc: {
     id: 'rcc',
+    isPublished: false,
     title: 'RCC Bridge Design & BIM',
     shortTitle: 'RCC Bridge',
     image: '/course_rcc.png',
@@ -178,6 +179,7 @@ const courses = {
 
   steel: {
     id: 'steel',
+    isPublished: false,
     title: 'Steel Bridge Design & Engineering',
     shortTitle: 'Steel Bridge',
     image: '/course_steel.png',
@@ -260,7 +262,8 @@ const courses = {
 
   psc: {
     id: 'psc',
-    title: 'PSC Bridge Design & BrIM',
+    isPublished: true,
+    title: 'PSC I-Girder Bridge Design',
     shortTitle: 'PSC Bridge',
     image: '/course_psc.png',
     tagline: 'PSC is where senior bridge engineering begins. This is the program that gets you there.',
@@ -401,5 +404,5 @@ export function getCourse(id) {
 }
 
 export function getAllCourses() {
-  return Object.values(courses);
+  return Object.values(courses).filter(course => course.isPublished);
 }

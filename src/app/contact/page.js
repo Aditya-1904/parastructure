@@ -1,6 +1,9 @@
 import styles from './contact.module.css';
+import { getAllCourses } from '@/data/courses';
 
 export default function ContactPage() {
+  const courses = getAllCourses();
+
   return (
     <div className={styles.contactContainer}>
       <div className={styles.headerSpacer}></div>
@@ -44,9 +47,9 @@ export default function ContactPage() {
             <div className={styles.formGroup}>
               <label htmlFor="course">Which program are you interested in?</label>
               <select id="course">
-                <option>RCC Bridge Design & BIM</option>
-                <option>Steel Bridge Design & Engineering</option>
-                <option>PSC Bridge Design & BrIM</option>
+                {courses.map(course => (
+                  <option key={course.id}>{course.title}</option>
+                ))}
                 <option>I'm not sure yet</option>
               </select>
             </div>
