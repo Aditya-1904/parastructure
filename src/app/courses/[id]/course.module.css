@@ -143,24 +143,65 @@
    ============================ */
 .contentLayout {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 340px;
   gap: var(--s-10);
-  max-width: calc(var(--max-width) + 2 * var(--s-8));
+  max-width: 1100px;
   width: 100%;
   margin: 0 auto;
-  padding: var(--s-12) var(--s-8) var(--s-16);
+  padding: var(--s-12) var(--s-5) var(--s-24);
   align-items: start;
 }
 
-/* ============================
-   MAIN CONTENT
-   ============================ */
 .mainContent {
   display: flex;
   flex-direction: column;
   gap: var(--s-12);
 }
 
+/* ============================
+   HERO BUY ACTIONS
+   ============================ */
+.heroBuyAction {
+  margin-top: var(--s-8);
+  padding-top: var(--s-6);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.heroPriceBlock {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+}
+
+.heroPrice {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-inverted);
+}
+
+.heroEmi {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.6);
+}
+
+.heroButtons {
+  display: flex;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+}
+
+.heroGuarantee {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
+/* ============================
+   SECTIONS
+   ============================ */
 .section {}
 
 .sectionTitle {
@@ -170,11 +211,44 @@
   color: var(--text-primary);
   letter-spacing: -0.02em;
   margin-bottom: var(--s-6);
-  padding-bottom: var(--s-4);
-  border-bottom: 1px solid var(--card-border);
 }
 
-/* Curriculum Accordion */
+/* Udemy Box */
+.udemyBox {
+  border: 1px solid var(--card-border);
+  padding: var(--s-6) var(--s-8);
+  border-radius: var(--r-xl);
+  background: var(--bg-surface);
+}
+
+.outcomesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--s-4);
+}
+
+.outcomeCard {
+  display: flex;
+  gap: var(--s-3);
+  align-items: flex-start;
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+}
+
+.outcomeCheck {
+  color: var(--accent-gold);
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* Curriculum */
+.curriculumStats {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--s-4);
+  font-weight: 500;
+}
+
 .modules {
   display: flex;
   flex-direction: column;
@@ -204,15 +278,6 @@
 }
 
 .moduleSummary::-webkit-details-marker { display: none; }
-
-.moduleNum {
-  font-family: var(--font-heading);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  color: var(--accent-gold);
-  letter-spacing: 0.05em;
-  flex-shrink: 0;
-}
 
 .moduleTitle {
   font-weight: 600;
@@ -255,81 +320,276 @@
   flex-shrink: 0;
 }
 
-/* Outcomes */
-.outcomesGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: var(--s-4);
-}
-
-.outcomeCard {
-  display: flex;
-  gap: var(--s-3);
-  align-items: flex-start;
-  background: rgba(200, 168, 107, 0.06);
-  border: 1px solid rgba(200, 168, 107, 0.2);
-  border-radius: var(--r-lg);
-  padding: var(--s-5);
-  font-size: 0.9375rem;
-  color: var(--text-primary);
-  font-weight: 500;
-}
-
-.outcomeCheck {
-  color: var(--accent-gold);
-  font-weight: 800;
-  font-size: 1rem;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-/* Who is this for */
+/* Target Audience & Tools */
 .audienceList {
   display: flex;
   flex-direction: column;
-  gap: var(--s-4);
+  gap: var(--s-3);
+  margin-bottom: var(--s-6);
 }
 
 .audienceItem {
   display: flex;
   align-items: center;
-  gap: var(--s-4);
+  gap: var(--s-3);
   font-size: 1rem;
-  color: var(--text-secondary);
-  padding: var(--s-4) var(--s-5);
-  background: var(--bg-surface);
-  border-radius: var(--r-md);
-  border: 1px solid var(--card-border);
+  color: var(--text-primary);
 }
 
 .audienceDot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-/* Tools */
 .toolsRow {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-3);
+  align-items: center;
 }
 
 .toolChip {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
-  padding: var(--s-2) var(--s-5);
+  padding: 4px 12px;
   border-radius: var(--r-full);
   background: var(--bg-surface);
   border: 1px solid var(--card-border);
   color: var(--text-secondary);
-  transition: var(--transition-base);
 }
 
-.toolChip:hover {
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
+/* Cohort Info */
+.cohortGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--s-5);
+}
+
+.cohortItem {
+  background: var(--bg-surface);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.cohortLabel {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.cohortValue {
+  font-size: 1.125rem;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* ============================
+   BOTTOM CTA BOX
+   ============================ */
+.bottomCtaBox {
+  background: var(--bg-dark);
+  border-radius: var(--r-xl);
+  padding: var(--s-10) var(--s-8);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.bottomCtaBox::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 250px;
+  height: 250px;
+  background: var(--course-color, var(--accent-gold));
+  filter: blur(50px);
+  opacity: 0.15;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.ctaTitle, .ctaDesc, .ctaActions, .ctaIncludes {
+  position: relative;
+  z-index: 1;
+}
+
+.ctaTitle {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--text-inverted);
+  margin-bottom: var(--s-3);
+}
+
+.ctaDesc {
+  color: rgba(255,255,255,0.7);
+  font-size: 1.125rem;
+  margin-bottom: var(--s-8);
+}
+
+.ctaActions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-8);
+  margin-bottom: var(--s-8);
+  flex-wrap: wrap;
+}
+
+.ctaPriceBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.ctaPrice {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-inverted);
+}
+
+.ctaEmi {
+  font-size: 0.9375rem;
+  color: rgba(255,255,255,0.6);
+}
+
+.ctaIncludes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--s-4);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ctaIncludes li {
+  color: rgba(255,255,255,0.8);
+  font-size: 0.9375rem;
+  display: flex;
+  gap: var(--s-2);
+}
+
+/* ============================
+   DETAILED SYLLABUS
+   ============================ */
+.subTitle {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin-bottom: var(--s-5);
+}
+
+.sectionDesc {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: var(--s-8);
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+  position: relative;
+  padding-left: var(--s-6);
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: var(--card-border);
+  border-radius: 2px;
+}
+
+.timelineItem {
+  display: flex;
+  gap: var(--s-5);
+  position: relative;
+}
+
+.timelineNum {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  background: var(--bg-main);
+  padding-top: 2px;
+  position: relative;
+  z-index: 2;
+  margin-left: -var(--s-6);
+  width: 24px;
+  text-align: center;
+}
+
+.timelineContent {
+  flex: 1;
+}
+
+.timelineTitle {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  color: var(--text-primary);
+  margin-bottom: var(--s-2);
+}
+
+.timelineDesc {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.mechanicsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-5);
+  margin-bottom: var(--s-6);
+}
+
+.mechanicCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--card-border);
+  padding: var(--s-6);
+  border-radius: var(--r-lg);
+}
+
+.mechanicTitle {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  color: var(--text-primary);
+  margin-bottom: var(--s-3);
+}
+
+.mechanicDesc {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.benefitsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: 0;
+  list-style: none;
+}
+
+.benefitItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+.benefitCheck {
+  font-weight: 700;
 }
 
 /* ============================
@@ -399,6 +659,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
+  list-style: none;
 }
 
 .includesItem {
@@ -430,164 +691,12 @@
   line-height: 1.5;
 }
 
-.cohortCard {
-  background: var(--bg-surface);
-  border: 1px solid var(--card-border);
-  border-radius: var(--r-xl);
-  padding: var(--s-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-4);
-}
-
-.cohortRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9375rem;
-}
-
-.cohortRow span {
-  color: var(--text-secondary);
-}
-
-.cohortRow strong {
-  color: var(--text-primary);
-  font-weight: 700;
-}
-
-/* ============================
-   DETAILED SYLLABUS (TIMELINE & MECHANICS)
-   ============================ */
-
-.sectionDesc {
-  color: var(--text-secondary);
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: var(--s-8);
-  max-width: 700px;
-}
-
-.timeline {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-6);
-  position: relative;
-  padding-left: var(--s-6);
-}
-
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 10px;
-  top: 10px;
-  bottom: 10px;
-  width: 2px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 2px;
-}
-
-.timelineItem {
-  display: flex;
-  gap: var(--s-5);
-  position: relative;
-}
-
-.timelineNum {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1rem;
-  background: var(--bg-main);
-  padding-top: 2px;
-  position: relative;
-  z-index: 2;
-  margin-left: -var(--s-6);
-  width: 24px;
-  text-align: center;
-}
-
-.timelineContent {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: var(--s-4) var(--s-5);
-  border-radius: var(--r-md);
-}
-
-.timelineTitle {
-  font-family: var(--font-heading);
-  font-size: 1.125rem;
-  color: var(--text-primary);
-  margin-bottom: var(--s-2);
-}
-
-.timelineDesc {
-  color: var(--text-secondary);
-  font-size: 0.9375rem;
-  line-height: 1.6;
-}
-
-.mechanicsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--s-5);
-  margin-bottom: var(--s-8);
-}
-
-.mechanicCard {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: var(--s-6);
-  border-radius: var(--r-lg);
-}
-
-.mechanicTitle {
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  color: var(--text-primary);
-  margin-bottom: var(--s-3);
-}
-
-.mechanicDesc {
-  color: var(--text-secondary);
-  font-size: 0.9375rem;
-  line-height: 1.6;
-}
-
-.benefitsTitle {
-  font-family: var(--font-heading);
-  font-size: 1.125rem;
-  color: var(--text-primary);
-  margin-bottom: var(--s-4);
-}
-
-.benefitsList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-3);
-  padding: 0;
-}
-
-.benefitItem {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--s-3);
-  color: var(--text-secondary);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.benefitCheck {
-  font-weight: 700;
-  margin-top: 1px;
-}
-
 /* ============================
    RESPONSIVE
    ============================ */
 @media (max-width: 1100px) {
   .contentLayout {
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: 1fr 300px;
   }
 }
 
@@ -595,24 +704,63 @@
   .contentLayout {
     grid-template-columns: 1fr;
   }
-
   .sidebar {
     position: static;
-  }
-
-  .heroStats {
-    gap: var(--s-5);
   }
 }
 
 @media (max-width: 600px) {
+  .page {
+    overflow-x: hidden;
+  }
+
+  .mainContent {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
   .heroBanner {
     padding-left: var(--s-5);
     padding-right: var(--s-5);
   }
+  
+  .heroButtons {
+    flex-direction: column;
+  }
+  
+  .heroButtons a {
+    width: 100%;
+  }
 
-  .contentLayout {
-    padding-left: var(--s-5);
-    padding-right: var(--s-5);
+  .mechanicsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .outcomesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cohortGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .udemyBox {
+    padding: var(--s-5);
+  }
+
+  .bottomCtaBox {
+    padding: var(--s-8) var(--s-5);
+  }
+
+  .timeline {
+    padding-left: var(--s-4);
+  }
+  
+  .timelineNum {
+    margin-left: -var(--s-4);
+  }
+
+  .mechanicCard {
+    padding: var(--s-4);
   }
 }
