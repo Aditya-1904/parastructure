@@ -744,6 +744,10 @@
     grid-template-columns: 1fr;
   }
   
+  .ctaIncludes {
+    grid-template-columns: 1fr;
+  }
+  
   .udemyBox {
     padding: var(--s-5);
   }
