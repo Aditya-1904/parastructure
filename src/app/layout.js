@@ -1,4 +1,5 @@
 import { Outfit, Inter } from "next/font/google";
+import { ClerkProvider } from '@clerk/nextjs'
 import "./globals.css";
 import Header from "@/components/Header";
 import Chatbot from "@/components/Chatbot";
@@ -38,13 +39,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${outfit.variable} ${inter.variable}`}>
-      <body>
-        <Header />
-        <main style={{ flexGrow: 1 }}>{children}</main>
-        <Chatbot />
-        <Footer />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className={`${outfit.variable} ${inter.variable}`}>
+        <body>
+          <Header />
+          <main style={{ flexGrow: 1 }}>{children}</main>
+          <Chatbot />
+          <Footer />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

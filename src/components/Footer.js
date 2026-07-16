@@ -1,10 +1,20 @@
+'use client';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import styles from './components.module.css';
 import { getAllCourses } from '@/data/courses';
 
 export default function Footer() {
   const courses = getAllCourses();
   const year = new Date().getFullYear();
+  const pathname = usePathname();
+
+  const handleLinkClick = (e, href) => {
+    if (pathname === href) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <footer className={styles.footer}>
@@ -34,9 +44,16 @@ export default function Footer() {
           <div className={styles.linkGroup}>
             <h4 className={styles.linkGroupTitle}>Programs</h4>
             <ul>
-              {courses.map(c => (
-                <li key={c.id}><Link href={`/courses/${c.id}`}>{c.shortTitle}</Link></li>
-              ))}
+              {courses.map(c => {
+                const href = `/courses/${c.id}`;
+                return (
+                  <li key={c.id}>
+                    <Link href={href} onClick={(e) => handleLinkClick(e, href)}>
+                      {c.shortTitle}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <div className={styles.linkGroup}>
@@ -61,9 +78,9 @@ export default function Footer() {
       <div className={styles.footerBottom}>
         <p>© {year} Parastructure Pvt. Ltd. All rights reserved.</p>
         <div className={styles.footerLegal}>
-          <Link href="/contact">Privacy Policy</Link>
-          <Link href="/contact">Terms of Service</Link>
-          <Link href="/contact">Refund Policy</Link>
+          <Link href="/privacy">Privacy Policy</Link>
+          <Link href="/terms">Terms of Service</Link>
+          <Link href="/refund">Refund Policy</Link>
         </div>
       </div>
     </footer>

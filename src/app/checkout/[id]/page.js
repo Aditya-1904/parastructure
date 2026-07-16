@@ -3,6 +3,7 @@ import { useState, use } from 'react';
 import Link from 'next/link';
 import { getCourse } from '@/data/courses';
 import { PAYMENT_CONFIG, formatPrice, getEmiAmount } from '@/config/payment';
+import { enrollUserInCourse } from '@/actions/enroll';
 import styles from './checkout.module.css';
 
 export default function CheckoutPage({ params }) {
@@ -41,17 +42,22 @@ export default function CheckoutPage({ params }) {
     if (errors[e.target.name]) setErrors(errs => ({ ...errs, [e.target.name]: '' }));
   }
 
-  function handlePay(e) {
+  async function handlePay(e) {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
 
     if (paymentMethod === 'bank') {
       setLoading(true);
-      // Simulate API call for bank transfer
-      setTimeout(() => {
+      // Execute Server Action to save enrollment to Supabase
+      const res = await enrollUserInCourse(course.id, form.utr, 'bank', course.price);
+      
+      if (res.success) {
         window.location.href = `/contact?enrolled=1&method=bank`;
-      }, 1500);
+      } else {
+        alert(res.error || 'Failed to submit enrollment.');
+        setLoading(false);
+      }
       return;
     }
 
@@ -130,14 +136,14 @@ export default function CheckoutPage({ params }) {
               <hr className={styles.divider}/>
 
               <ul className={styles.includesList}>
-                {[
+                {(course.features || [
                   course.sessions + ' live sessions',
                   course.hours + ' of recorded content',
                   'Real project reviews',
                   '1-on-1 mentorship access',
                   'Portfolio building',
                   '7-day money-back guarantee',
-                ].map(item => (
+                ]).map(item => (
                   <li key={item} className={styles.includesItem}>
                     <span className={styles.includesCheck}>✓</span>
                     {item}

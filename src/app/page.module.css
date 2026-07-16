@@ -134,7 +134,7 @@
    ============================ */
 .countdownSection {
   background: var(--bg-dark);
-  padding: var(--s-12) var(--s-8);
+  padding: var(--s-6) var(--s-8);
 }
 
 .countdownInner {
@@ -204,7 +204,7 @@
 .sectionHeader {
   text-align: center;
   max-width: 700px;
-  margin: 0 auto var(--s-12);
+  margin: 0 auto var(--s-8);
 }
 
 .sectionEyebrow {
@@ -237,13 +237,14 @@
    PROGRAMS / COURSES
    ============================ */
 .programsSection {
-  padding: var(--s-24) var(--s-8);
+  padding: var(--s-16) var(--s-8);
   background: var(--bg-main);
 }
 
 .coursesGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: var(--s-6);
   max-width: var(--max-width);
   margin: 0 auto;
@@ -258,6 +259,8 @@
   flex-direction: column;
   position: relative;
   transition: var(--transition-slow);
+  width: 100%;
+  max-width: 400px;
 }
 
 .courseCard:hover {
@@ -404,7 +407,7 @@
    HOW IT WORKS
    ============================ */
 .howSection {
-  padding: var(--s-24) var(--s-8);
+  padding: var(--s-16) var(--s-8);
   background: var(--bg-surface);
 }
 
@@ -461,7 +464,7 @@
    TESTIMONIALS
    ============================ */
 .testimonialsSection {
-  padding: var(--s-24) var(--s-8);
+  padding: var(--s-16) var(--s-8);
   background: var(--bg-main);
 }
 
@@ -514,7 +517,7 @@
    FAQ
    ============================ */
 .faqSection {
-  padding: var(--s-24) var(--s-8);
+  padding: var(--s-16) var(--s-8);
   background: var(--bg-main);
 }
 
@@ -523,7 +526,7 @@
    ============================ */
 .ctaBand {
   background: var(--bg-dark);
-  padding: var(--s-24) var(--s-8);
+  padding: var(--s-16) var(--s-8);
   text-align: center;
   position: relative;
   overflow: hidden;

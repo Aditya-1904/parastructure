@@ -29,37 +29,14 @@ export default function Home() {
         <div className={styles.heroOverlay} />
 
         <div className={styles.heroContent}>
-          <span className={styles.eyebrow}>Live Classes · Real Projects · Master the Tools</span>
           <h1 className={styles.heroTitle}>
             The Bridge Engineer{' '}
             <span className={styles.heroTitleAccent}>India Needs</span>
             {' '}Is You.
           </h1>
-          <p className={styles.heroDesc}>
-            Stop watching tutorials. Join a live cohort of 40 serious engineers,
-            work on real mega-project data, and walk out with the practical design skills
-            demanded by L&T, AECOM, and top NHAI consultancies.
-          </p>
           <div className={styles.heroButtons}>
-            <Link href="/#programs" className="btnGold">{courses.length === 1 ? 'View Program' : 'See All Programs'}</Link>
+            <Link href="/#programs" className="btnGold">View Programs</Link>
             <Link href="/contact" className="btnSecondary">Get the Syllabus</Link>
-          </div>
-
-          <div className={styles.heroSocProof}>
-            <div className={styles.heroStat}>
-              <span className={styles.heroStatValue}>1,000+</span>
-              <span className={styles.heroStatLabel}>Global Alumni</span>
-            </div>
-            <div className={styles.statDivider}/>
-            <div className={styles.heroStat}>
-              <span className={styles.heroStatValue}>4.8 ★</span>
-              <span className={styles.heroStatLabel}>Google Reviews</span>
-            </div>
-            <div className={styles.statDivider}/>
-            <div className={styles.heroStat}>
-              <span className={styles.heroStatValue}>200+</span>
-              <span className={styles.heroStatLabel}>Real Projects Modeled</span>
-            </div>
           </div>
         </div>
       </section>
@@ -72,30 +49,15 @@ export default function Home() {
           <CountdownTimer />
           <div className={styles.countdownCta}>
             <p className={styles.countdownText}>
-              June 2026 Cohort · Only 40 Seats · Applications Close Soon
+              Next Cohort · Only 40 Seats · Applications Close Soon
             </p>
             <Link href="/contact" className="btnGold">Reserve Your Seat →</Link>
           </div>
         </div>
       </section>
 
-      {/* ================================================
-          STATS BAR
-          ================================================ */}
-      <section className={styles.statsBar}>
-        {[
-          { value: '1,000+', label: 'Global Alumni' },
-          { value: '200+', label: 'Real Projects Modeled' },
-          { value: '160+', label: 'Hours of Training' },
-          { value: '4.8 / 5', label: 'Google Rating' },
-          { value: '≤ 40', label: 'Students Per Cohort' },
-        ].map((s, i) => (
-          <div key={i} className={styles.statItem}>
-            <div className={styles.statValue}>{s.value}</div>
-            <div className={styles.statLabel}>{s.label}</div>
-          </div>
-        ))}
-      </section>
+
+
 
       {/* ================================================
           PROGRAMS SECTION
@@ -104,8 +66,7 @@ export default function Home() {
         <div className={styles.sectionHeader}>
           <span className={styles.sectionEyebrow}>What We Teach</span>
           <h2 className={styles.sectionTitle}>
-            {courses.length === 1 ? 'Our Flagship Program.' : `${courses.length} Programs.`}<br/>
-            One Clear Goal — Engineering Mastery.
+            {courses.length === 1 ? 'Our Flagship Program.' : `${courses.length} Programs.`}
           </h2>
           <p className={styles.sectionSubtitle}>
             {courses.length === 1 ? 'This program is' : 'Each program is'} built around one niche, taught live by engineers who are actively working
@@ -140,15 +101,11 @@ export default function Home() {
                   <span className={styles.metaBadge}>⏱ {course.duration}</span>
                   <span className={styles.metaBadge}>🎥 {course.sessions}</span>
                   <span className={styles.metaBadge}>📡 {course.mode}</span>
+                  {course.hasRecordings && <span className={styles.metaBadge}>📼 Recordings Available</span>}
                 </div>
 
                 <div className={styles.courseFooter}>
-                  <div>
-                    <div className={styles.coursePrice}>{formatPrice(course.price)}</div>
-                    <div className={styles.courseEmi}>
-                      or {formatPrice(Math.ceil(course.price / course.emiMonths))}/mo × {course.emiMonths}
-                    </div>
-                  </div>
+                  <div></div>
                   <Link href={`/courses/${course.id}`} className="btnPrimary">
                     View Program
                   </Link>
@@ -165,7 +122,7 @@ export default function Home() {
       <section id="about" className={styles.howSection}>
         <div className={styles.sectionHeader}>
           <span className={styles.sectionEyebrow}>The Process</span>
-          <h2 className={styles.sectionTitle}>Not a Course. A Career Launchpad.</h2>
+          <h2 className={styles.sectionTitle}>Your Journey Starts Here</h2>
           <p className={styles.sectionSubtitle}>
             We designed this end-to-end — from day one of your application to the day you finish your capstone project.
           </p>
@@ -175,23 +132,23 @@ export default function Home() {
           {[
             {
               step: '01',
-              title: 'Apply in 5 Minutes',
-              desc: 'No entrance test. No long forms. Just tell us who you are and where you want to go. Our team calls every applicant personally — because we take your career as seriously as you do.',
+              title: 'Take the First Step',
+              desc: 'Every bridge engineer starts somewhere. Apply with a few details, and we\'ll help you begin your learning journey with confidence.',
             },
             {
               step: '02',
-              title: 'Learn Live, Not Alone',
-              desc: 'Twice a week, you\'re in a live class with 39 other engineers who are just as serious as you. Ask questions, debate design decisions, and learn from what your peers get wrong — not just what your instructor says.',
+              title: 'Learn With Guidance',
+              desc: 'Join live classes, ask questions freely, and build your understanding step by step with instructor support.',
             },
             {
               step: '03',
-              title: 'Work on the Real Thing',
-              desc: 'Forget dummy datasets. You\'ll analyse actual load cases from NHAI projects, model real bridge geometries in MIDAS Civil, and submit deliverables that practicing engineers review with the same standard as client submissions.',
+              title: 'Turn Theory Into Practice',
+              desc: 'Move beyond textbooks by solving practical bridge design problems, performing calculations, and creating engineering models.',
             },
             {
               step: '04',
-              title: 'Build a Master Portfolio',
-              desc: 'Leave the program with professional-grade design models, calculation reports, and BIM deliverables. Our alumni don\'t just put \'MIDAS Civil\' on their resume — they bring their actual project models to interviews.',
+              title: 'Build a Portfolio You Can Be Proud Of',
+              desc: 'Complete a capstone bridge design project and finish the program with work that showcases your skills and progress.',
             },
           ].map(({ step, title, desc }) => (
             <div key={step} className={styles.stepCard}>
@@ -208,35 +165,12 @@ export default function Home() {
           ================================================ */}
       <section id="testimonials" className={styles.testimonialsSection}>
         <div className={styles.sectionHeader}>
-          <span className={styles.sectionEyebrow}>In Their Own Words</span>
-          <h2 className={styles.sectionTitle}>Engineers Who Took the<br/>Leap — and Landed.</h2>
+          <h2 className={styles.sectionTitle}>Student Feedback</h2>
           <p className={styles.sectionSubtitle}>
-            We don't cherry-pick. These are unsolicited reviews from engineers who went through the cohort.
+            Honest feedback from students who learned with ParaStructure.
           </p>
         </div>
         <Testimonials />
-      </section>
-
-      {/* ================================================
-          TOOLS & TECH
-          ================================================ */}
-      <section className={styles.toolsSection}>
-        <div className={styles.sectionHeader}>
-          <span className={styles.sectionEyebrow}>The Toolkit</span>
-          <h2 className={styles.sectionTitle}>Software That Gets You Hired.</h2>
-          <p className={styles.sectionSubtitle}>
-            Every tool we teach is heavily utilized by top tier engineering firms and consultancies globally.
-            We don't waste your time on outdated software.
-          </p>
-        </div>
-        <div className={styles.toolsGrid}>
-          {TOOLS.map((tool) => (
-            <div key={tool.name} className={styles.toolChip}>
-              <span className={styles.toolIcon}>{tool.icon}</span>
-              <span className={styles.toolName}>{tool.name}</span>
-            </div>
-          ))}
-        </div>
       </section>
 
       {/* ================================================
@@ -258,13 +192,13 @@ export default function Home() {
           ================================================ */}
       <section className={styles.ctaBand}>
         <div className={styles.ctaBandInner}>
-          <h2 className={styles.ctaTitle}>One year from now,<br/>where will you be?</h2>
+          <h2 className={styles.ctaTitle}>One year from now,<br />where will you be?</h2>
           <p className={styles.ctaDesc}>
             The June cohort has 40 seats and a waitlist that grows every week.
             The application takes 5 minutes. The decision could change your entire career.
           </p>
           <div className={styles.ctaButtons}>
-            <Link href="/contact" className="btnGold">Apply Now — Free & Fast</Link>
+            <Link href="/#programs" className="btnGold">Apply Now — Free & Fast</Link>
             <Link href="/contact" className={styles.ctaSecondaryLink}>Talk to the Team →</Link>
           </div>
         </div>

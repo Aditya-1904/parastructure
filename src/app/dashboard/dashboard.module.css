@@ -1,0 +1,196 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg-main);
+}
+
+.headerSpacer {
+  height: var(--header-height);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: calc(100vh - var(--header-height));
+}
+
+.sidebar {
+  background: var(--bg-surface);
+  border-right: 1px solid var(--card-border);
+  padding: var(--s-8) var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.sidebarTitle {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--s-2);
+}
+
+.navLink {
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.navLink:hover {
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
+}
+
+.navLinkActive {
+  background: rgba(200, 168, 107, 0.1);
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+.main {
+  padding: var(--s-10) var(--s-12);
+}
+
+.welcomeSection {
+  margin-bottom: var(--s-10);
+}
+
+.greeting {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: var(--s-2);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: var(--s-6);
+}
+
+.courseGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--s-6);
+}
+
+.courseCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.courseCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.cardImage {
+  height: 160px;
+  background: var(--bg-dark);
+  position: relative;
+}
+
+.cardImageInner {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.8;
+}
+
+.cardContent {
+  padding: var(--s-6);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.courseTitle {
+  font-weight: 700;
+  font-size: 1.125rem;
+  margin-bottom: var(--s-4);
+  line-height: 1.4;
+}
+
+.progressContainer {
+  margin-top: auto;
+  margin-bottom: var(--s-5);
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--s-2);
+}
+
+.pendingBadge {
+  text-align: center;
+  padding: 12px 24px;
+  background: rgba(255, 165, 2, 0.1);
+  color: #ffa502;
+  border-radius: var(--r-sm);
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.progressBar {
+  height: 6px;
+  background: var(--bg-surface-2);
+  border-radius: var(--r-full);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--accent-gold);
+  border-radius: var(--r-full);
+}
+
+.emptyState {
+  background: var(--bg-surface);
+  border: 1px dashed var(--card-border);
+  border-radius: var(--r-xl);
+  padding: var(--s-12);
+  text-align: center;
+}
+
+.emptyState h3 {
+  font-size: 1.25rem;
+  margin-bottom: var(--s-2);
+}
+
+.emptyState p {
+  color: var(--text-secondary);
+  margin-bottom: var(--s-6);
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+  .main {
+    padding: var(--s-6) var(--s-5);
+  }
+}

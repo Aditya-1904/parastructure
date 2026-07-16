@@ -1,0 +1,354 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg-main);
+}
+
+.headerSpacer {
+  height: var(--header-height);
+}
+
+.layout {
+  display: flex;
+  height: calc(100vh - var(--header-height));
+  overflow: hidden;
+}
+
+/* ============================
+   SIDEBAR (CALENDAR)
+   ============================ */
+.sidebar {
+  width: 320px;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebarHeader {
+  padding: var(--s-5) var(--s-6);
+  border-bottom: 1px solid var(--card-border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-surface);
+  z-index: 10;
+}
+
+.sidebarHeader h3 {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+}
+
+.calendarList {
+  display: flex;
+  flex-direction: column;
+  padding: var(--s-2) 0;
+}
+
+.calendarItem {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-6);
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 0.875rem;
+}
+
+.calendarItem:hover {
+  background: var(--bg-surface-2);
+}
+
+.calendarActive {
+  background: rgba(200, 168, 107, 0.05);
+  border-left: 3px solid var(--accent-gold);
+}
+
+.calendarLocked {
+  color: var(--text-tertiary);
+}
+
+.calDate {
+  font-weight: 600;
+  min-width: 45px;
+  color: var(--text-secondary);
+}
+
+.calendarActive .calDate {
+  color: var(--accent-gold);
+}
+
+.calTitle {
+  flex-grow: 1;
+}
+
+.calIcon {
+  font-size: 1rem;
+}
+
+/* ============================
+   MAIN CONTENT
+   ============================ */
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--bg-main);
+  padding: var(--s-6) var(--s-8);
+}
+
+.tabsContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: var(--s-6);
+}
+
+.tabHeader {
+  display: flex;
+  gap: var(--s-4);
+}
+
+.tabBtn {
+  padding: var(--s-4) 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 3px solid transparent;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  cursor: pointer;
+}
+
+.activeTab {
+  color: var(--accent-gold);
+  border-bottom-color: var(--accent-gold);
+}
+
+.timer {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  padding-bottom: var(--s-4);
+}
+
+.timer span {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: monospace;
+  font-size: 1rem;
+}
+
+/* ============================
+   LECTURE CARD (Scalar Style)
+   ============================ */
+.lectureCard {
+  display: flex;
+  background: var(--bg-surface);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: var(--s-8);
+}
+
+.instructorSide {
+  width: 250px;
+  padding: var(--s-6);
+  border-right: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.thumbnail {
+  width: 100px;
+  height: 100px;
+  background: var(--bg-surface-2);
+  border-radius: 12px;
+  margin-bottom: var(--s-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+
+.instructorName {
+  font-size: 1.125rem;
+  margin-bottom: 4px;
+}
+
+.instructorRole {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+  margin-bottom: var(--s-4);
+}
+
+.instructorStats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: var(--accent-gold);
+  font-weight: 600;
+  border-top: 1px solid var(--card-border);
+  padding-top: var(--s-4);
+  width: 100%;
+}
+
+.detailsSide {
+  flex: 1;
+  padding: var(--s-6) var(--s-8);
+  display: flex;
+  flex-direction: column;
+}
+
+.lectureHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin-bottom: var(--s-2);
+}
+
+.lectureTitle {
+  font-size: 1.5rem;
+  font-family: var(--font-heading);
+}
+
+.upcomingBadge {
+  background: rgba(255, 165, 2, 0.1);
+  color: #ffa502;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.lectureDate {
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  margin-bottom: var(--s-6);
+}
+
+.topicsSection {
+  margin-bottom: var(--s-8);
+}
+
+.topicsSection h4 {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--s-3);
+}
+
+.topicsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.topicPill {
+  background: var(--bg-main);
+  border: 1px solid var(--card-border);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.actionRow {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--s-6);
+}
+
+.joinBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 12px 24px;
+}
+
+.rewards {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  display: flex;
+  gap: var(--s-3);
+}
+
+/* ============================
+   DEMO SECTION
+   ============================ */
+.demoSection h3 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  margin-bottom: var(--s-4);
+}
+
+.demoList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--s-4);
+}
+
+.demoCard {
+  display: flex;
+  background: var(--bg-surface);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.demoCard:hover {
+  transform: translateY(-2px);
+}
+
+.demoThumb {
+  width: 100px;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-gold);
+}
+
+.demoInfo {
+  padding: var(--s-4);
+}
+
+.demoInfo h4 {
+  font-size: 0.9375rem;
+  margin-bottom: 4px;
+}
+
+.demoInfo p {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+@media (max-width: 900px) {
+  .layout {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--card-border);
+    max-height: 250px;
+  }
+  .lectureCard {
+    flex-direction: column;
+  }
+  .instructorSide {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--card-border);
+  }
+}

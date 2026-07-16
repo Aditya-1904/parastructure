@@ -523,7 +523,7 @@
   padding-top: 2px;
   position: relative;
   z-index: 2;
-  margin-left: -var(--s-6);
+  margin-left: calc(-1 * var(--s-6));
   width: 24px;
   text-align: center;
 }
@@ -761,7 +761,7 @@
   }
   
   .timelineNum {
-    margin-left: -var(--s-4);
+    margin-left: calc(-1 * var(--s-4));
   }
 
   .mechanicCard {

@@ -1,0 +1,128 @@
+.container {
+  min-height: 100vh;
+  background: var(--bg-main);
+  color: var(--text-primary);
+}
+
+.headerSpacer {
+  height: var(--header-height);
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--s-8) var(--s-4);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  margin-bottom: var(--s-8);
+}
+
+.subtitle {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  margin: var(--s-8) 0 var(--s-4);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--s-6);
+}
+
+.statCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: var(--s-6);
+}
+
+.statCard h3 {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--s-2);
+}
+
+.statNumber {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th, .table td {
+  padding: var(--s-4) var(--s-6);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.table th {
+  background: var(--bg-surface-2);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.table td {
+  font-size: 0.9375rem;
+}
+
+.userId {
+  font-family: monospace;
+  color: var(--text-tertiary);
+}
+
+.status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.active {
+  background: rgba(46, 213, 115, 0.1);
+  color: #2ed573;
+}
+
+.pending_verification {
+  background: rgba(255, 165, 2, 0.1);
+  color: #ffa502;
+}
+
+.approveBtn {
+  background: var(--accent-gold);
+  color: #000;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  transition: opacity 0.2s;
+}
+
+.approveBtn:hover {
+  opacity: 0.9;
+}
+
+.emptyState {
+  text-align: center;
+  color: var(--text-tertiary);
+  padding: var(--s-8) !important;
+}

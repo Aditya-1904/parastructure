@@ -29,13 +29,13 @@
 
 .digit {
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
   font-weight: 800;
   color: var(--text-inverted);
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: var(--r-md);
-  width: clamp(70px, 10vw, 90px);
+  width: clamp(55px, 8vw, 75px);
   text-align: center;
   padding: var(--s-3) 0;
   letter-spacing: -0.02em;
@@ -53,7 +53,7 @@
 
 .colon {
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
   font-weight: 800;
   color: var(--accent-gold);
   margin: 0 var(--s-2);

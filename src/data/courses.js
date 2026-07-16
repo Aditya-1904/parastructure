@@ -60,17 +60,12 @@ export const FAQS = [
   {
     question: 'I already have 2–3 years of experience. Is this too basic for me?',
     answer:
-      'Our most successful alumni have exactly 2–4 years of experience. You already know enough to ask the right questions — this program gives you the specialisation and the tools to break through to senior roles. If you are genuinely advanced, the Steel and PSC tracks are demanding by any standard.',
+      'These programs are designed for recent graduates and early-career engineers who want to build practical bridge design skills and position themselves for better-paying engineering opportunities. If you are genuinely advanced, the Steel and PSC tracks are demanding by any standard.',
   },
   {
     question: 'What makes this different from a YouTube course or an online certification?',
     answer:
-      'Three things: live feedback, real project data, and intensive peer learning. On YouTube, nobody reviews your design. Here, a practicing engineer marks your MIDAS model the same way a project manager would on a real submission.',
-  },
-  {
-    question: 'What software do I need, and how expensive is it?',
-    answer:
-      'We provide student licenses for MIDAS Civil as part of the program. Autodesk products (Revit, AutoCAD) have free student licenses. You need a reasonably modern laptop — 8GB RAM minimum, 16GB recommended. We send a full technical checklist after you apply.',
+      'Watching videos can teach concepts. Building engineering skills requires practice, guidance, and feedback. This program is designed to help you learn by doing through live sessions, practical assignments, and a structured bridge design project.',
   },
   {
     question: 'What happens after I complete the program?',
@@ -81,11 +76,6 @@ export const FAQS = [
     question: 'What are the payment options? Can I pay in instalments?',
     answer:
       'We accept UPI, Net Banking, and all Credit/Debit cards via Razorpay. No-cost EMI is available through HDFC, ICICI, Axis, and SBI. If you need a custom payment plan, write to us — we have worked things out for deserving candidates before.',
-  },
-  {
-    question: 'What if I am not satisfied? Can I get a refund?',
-    answer:
-      'Full refund, no questions, within 7 days of the cohort start date. We have had exactly two refund requests in our history — both were processed the same day. We are confident enough in the program to make the guarantee easy.',
   },
 ];
 
@@ -263,17 +253,35 @@ const courses = {
   psc: {
     id: 'psc',
     isPublished: true,
-    title: 'PSC I-Girder Bridge Design',
+    title: 'PSC-I Girder Design Program',
     shortTitle: 'PSC Bridge',
     image: '/course_psc.png',
     tagline: 'PSC is where senior bridge engineering begins. This is the program that gets you there.',
     description:
-      'Prestressed concrete is the dominant bridge type on every major Indian expressway and NHAI project — and it\'s the niche that commands senior roles and the best salaries. This advanced program covers PSC I-girder and box girder design from first principles through to MIDAS Civil construction stage analysis and BrIM deliverables using Dynamo. If you\'ve completed the RCC program or have solid design experience, this is the natural next step.',
-    duration: '6 Months',
+      'Master PSC I-Girder Bridge Design through a structured program covering bridge engineering fundamentals, design calculations, relevant IRC standards, practical design exercises, and a comprehensive capstone project. Designed for civil engineering students and engineers who want to build practical bridge design skills.',
+    longDescription: [
+      "Let's be totally honest. Companies do not hire you because you have a degree; they hire you because you can solve their design problems.",
+      "Right now, India is building flyovers, expressways, and bridges at a record-breaking pace. Yet, thousands of civil graduates are unemployed because college textbooks still teach obsolete methods, while actual design firms use complex 3D software and advanced regulatory codes like IRC:112.",
+      "This course is designed to fix that problem in exactly 3-4 months. We don't make you memorize long academic derivations. Instead, we treat you like a Junior Design Engineer from day one.",
+      "[Write DBR Report] ──> [Do Manual Calculations] ──> [Build 3D MIDAS Model] ──> [Run Safety Checks]",
+      "You will start with a blank screen and build a full 3D model of a Bridge. You will calculate the dimensions, program the real-world construction timeline step-by-step, figure out the post-tensioning cable paths, and check everything for safety against the latest Indian Road Congress codes.",
+      "By the time you complete this course, you will have a real structural design portfolio to bring to your interviews. You will be able to answer tough interview questions with absolute confidence because you have already designed the project with your own hands.",
+      "And not just that, you will be ready to explore more advanced bridges and that's the most important part of this course."
+    ],
+    duration: '3months',
     hours: '140+ Hours',
-    sessions: '56 Live Sessions',
+    sessions: '25 Live Sessions',
     level: 'Advanced',
-    mode: 'Online Live',
+    features: [
+      '50+ Hours of Practical Bridge Design Training',
+      'Interactive Live Doubt-Solving',
+      'Structured Study Material & Resources',
+      'Hands-on Design Assignments',
+      'Student Community for Learning & Discussion',
+      '1-Year Access to Session Recordings',
+    ],
+    mode: 'Live Online',
+    hasRecordings: true,
     language: 'Hindi & English',
     price: 59999,
     emiMonths: 6,
@@ -282,62 +290,73 @@ const courses = {
     color: '#7B68EE',
     modules: [
       {
-        title: 'Prestressing Fundamentals',
+        title: 'Project Kickoff & Design Basis Report (DBR)',
         topics: [
-          'Pre-tensioning vs post-tensioning systems',
-          'Prestressing force and eccentricity',
-          'Cable profiles and layouts',
-          'Anchorage zone design',
+          'Introduction to the Bridge Lifecycle: Understanding how a project goes from a proposal to an actual working drawing on site.',
         ],
       },
       {
-        title: 'Loss Calculations & Serviceability',
+        title: 'Section Properties & Geometric Calculations',
         topics: [
-          'Elastic shortening, creep, shrinkage losses',
-          'Friction and wobble losses',
-          'Crack width and deflection checks',
-          'Long-term behaviour of PSC elements',
+          'Section Property Computations: Calculating area, moment of inertia, and section modulus (Z) for I-girders.',
+          'Effective Flange Width: Applying standard code rules to determine how much of the deck slab acts as the top flange of your I-girder.',
         ],
       },
       {
-        title: 'PSC Bridge System Design',
+        title: 'IRC:6 Load Calculations & Combinations',
         topics: [
-          'PSC I-girder and box girder design (IRC: 112)',
-          'Balanced cantilever construction analysis',
-          'Transverse design of multi-cell box girders',
-          'Pier table and segment design',
+          'Dead Loads & SIDL Matrix: Compiling the weights of the concrete beam, wet deck slab, crash barriers, and utility lines.',
+          'IRC:6 Live Load Optimization: Placing Class 70R and Class A vehicles at critical positions to create maximum bending and shearing stress.',
+          'Load Combinations: Merging dead loads, live loads, impact factors, and environmental forces under Ultimate (ULS) and Serviceability (SLS) limits.',
         ],
       },
       {
-        title: 'BrIM & Parametric Design',
+        title: 'MIDAS Civil 3D Modeling from Absolute Zero',
         topics: [
-          'Bridge Information Modelling concepts',
-          'Dynamo for parametric bridge modelling',
-          'BrIM-based quantity extraction and scheduling',
-          'Digital twin setup for bridge structures',
+          'Nodes & Elements Geometry: Generating the physical structural layout of the bridge using basic coordinates and frame elements.',
+          'Section Making & Material Assignment: Inputting the custom I-girder shape and applying time-dependent concrete properties.',
+          'Prestress planning and detailing: How we model prestressing tendons in a MIDAS model.',
+          'Elastic & Rigid Links: Connecting the deck slab elements to the longitudinal girders to simulate perfect composite structural behaviour.',
+          'Boundary Conditions & Bearings: Simulating physical POT/PTFE bridge bearings (pinned, sliding, and expansion arrangements).',
         ],
       },
       {
-        title: 'MIDAS Civil — Advanced',
+        title: 'Construction Stages & Result Analysis',
         topics: [
-          'Tendon modelling in MIDAS',
-          'Creep and shrinkage analysis',
-          'Construction stage analysis for cantilever bridges',
-          'Design report generation',
+          'Construction Stage Analysis (CSA): How we make constructions stages based on real life scenarios. Setting up time-dependent steps in MIDAS: Prestressing in Girder -> Deck slab casting -> SIDL Application -> Loads for long term i.e. 100 years.',
+          'Live Load Application & Analysis Run: We will check how the structure behaves when live load runs over it.',
+          'Extracting Forces: Reading and validating Stresses, Bending Moment Diagrams (BMD), Shear Force Diagrams (SFD), and then comparing with codal provisions.',
+        ],
+      },
+      {
+        title: 'Prestressing Details & Loss Computations',
+        topics: [
+          'Tendon Profile Optimization: Designing the shape of the post-tensioning cables (parabolic and draped coordinates) to follow the bending moment shape.',
+          'Immediate Prestress Losses: Calculating tension drops due to friction along the duct, anchor wedge slip, and elastic concrete shortening.',
+          'Long-Term Prestress Losses: Computing long-term drops caused by concrete creep deformation, drying shrinkage, and relaxation of steel strands.',
+        ],
+      },
+      {
+        title: 'IRC:112 Structural Design Checks',
+        topics: [
+          'Serviceability Limit State (SLS) Checks: Keeping daily concrete stresses within bounds and calculating surface crack widths to protect steel from rust.',
+          'Ultimate Limit State (ULS) Checks: Verifying total structural safety against bending moment and shear failure.',
+          'Bearing Load Estimation: Extracting the maximum vertical and horizontal reaction forces to hand over to the bearing manufacturer and pier/column designer.',
         ],
       },
     ],
     outcomes: [
-      'Design PSC I-girder and box girder bridges to IRC standards',
-      'Perform advanced construction stage analysis in MIDAS Civil',
-      'Deliver BrIM models using Dynamo and Revit',
-      'Work on NHAI, expressway, and metro-rail bridge projects',
+      'Design PSC I-Girder and PSC Box Girder Bridges in accordance with relevant IRC standards',
+      'Perform bridge design calculations and construction stage analysis for prestressed concrete bridges',
+      'Understand the complete PSC bridge design workflow from planning to final design documentation',
+      'Complete a comprehensive PSC I-Girder Bridge Design project to build practical engineering skills',
     ],
     targetAudience: [
-      'Diploma, Graduate & Postgraduate Students looking to strengthen their CV and improve internship and career prospects',
-      'Site Engineers transitioning into design office roles',
-      'Professionals targeting NHAI and state highway projects',
-      'Engineers aiming for senior/lead design roles',
+      'Unemployed Civil Graduates: Freshers who want to bypass low-paying data-entry or generic jobs and enter the elite core structural field.',
+      'Site Engineers looking for an Office Role: Engineers tired of erratic site shifts, remote locations, and low growth who want to transition to a corporate design office.',
+      'CAD Drafters upgrading their skills: Traditional 2D detailers who want to learn 3D global analysis to boost their career growth and salary.',
+      'Final Year UG/PG Students: Ambitious students who want a genuine, high-quality capstone project that will make them stand out during campus placements.',
+      'Government/ Private engineers: if you are already working as a designer but wants to enhance your skills with a complete manual and software solutions of bridge design',
     ],
     tools: ['MIDAS Civil', 'Autodesk Revit', 'Dynamo', 'AutoCAD'],
     testimonials: [TESTIMONIALS[1], TESTIMONIALS[2]],

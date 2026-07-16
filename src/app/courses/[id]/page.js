@@ -4,7 +4,10 @@ import Testimonials from '@/components/Testimonials';
 import { getCourse } from '@/data/courses';
 import { formatPrice } from '@/config/payment';
 import { notFound } from 'next/navigation';
+import { auth } from '@clerk/nextjs/server';
 import styles from './course.module.css';
+
+import ExpandableDescription from '@/components/ExpandableDescription';
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -19,8 +22,12 @@ export async function generateMetadata({ params }) {
 export default async function CoursePage({ params }) {
   const { id } = await params;
   const course = getCourse(id);
-  if (!course) notFound();
+  
+  if (!course) {
+    notFound();
+  }
 
+  const { userId } = await auth();
   const emiAmount = Math.ceil(course.price / course.emiMonths);
 
   return (
@@ -67,9 +74,21 @@ export default async function CoursePage({ params }) {
         {/* Main Content (Left Column) */}
         <div className={styles.mainContent}>
 
-          {/* What You'll Achieve (Udemy Box) */}
-          <section className={styles.udemyBox}>
-            <h2 className={styles.sectionTitle}>What you'll learn</h2>
+          {/* Long Description Section */}
+          {course.longDescription && (
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>About This Program</h2>
+              <ExpandableDescription 
+                paragraphs={course.longDescription} 
+                fallback={course.description} 
+                className={styles.sectionDesc} 
+              />
+            </section>
+          )}
+
+          {/* Outcomes */}
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>What You'll Be Able to Do:</h2>
             <div className={styles.outcomesGrid}>
               {course.outcomes.map((o, i) => (
                 <div key={i} className={styles.outcomeCard}>
@@ -91,13 +110,6 @@ export default async function CoursePage({ params }) {
                 </li>
               ))}
             </ul>
-            
-            <div className={styles.toolsRow}>
-              <strong style={{marginRight: 'var(--s-3)'}}>Tools covered:</strong>
-              {course.tools.map((t) => (
-                <span key={t} className={styles.toolChip}>{t}</span>
-              ))}
-            </div>
           </section>
 
           {/* Curriculum */}
@@ -130,46 +142,7 @@ export default async function CoursePage({ params }) {
             </div>
           </section>
 
-          {/* Detailed Syllabus (Native Integration) */}
-          {course.detailedSyllabus && (
-            <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Deep Dive: Technical Syllabus</h2>
-              <p className={styles.sectionDesc}>Stop looking at idealized textbook problems. Learn the actual codal workflows used by top-tier infrastructure companies.</p>
-              
-              <h3 className={styles.subTitle}>The Design Workflow</h3>
-              <div className={styles.timeline}>
-                {course.detailedSyllabus.designProcess.map((step, i) => (
-                  <div key={i} className={styles.timelineItem}>
-                    <div className={styles.timelineNum} style={{ color: course.color }}>{String(i + 1).padStart(2, '0')}</div>
-                    <div className={styles.timelineContent}>
-                      <h4 className={styles.timelineTitle}>{step.title}</h4>
-                      <p className={styles.timelineDesc}>{step.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
 
-              <h3 className={styles.subTitle} style={{marginTop: 'var(--s-8)'}}>Mechanics & Theory</h3>
-              <div className={styles.mechanicsGrid}>
-                <div className={styles.mechanicCard}>
-                  <h4 className={styles.mechanicTitle}>{course.detailedSyllabus.mechanicsComparison.conventional.title}</h4>
-                  <p className={styles.mechanicDesc}>{course.detailedSyllabus.mechanicsComparison.conventional.desc}</p>
-                </div>
-                <div className={styles.mechanicCard} style={{ borderColor: course.color, background: 'rgba(255,255,255,0.02)' }}>
-                  <h4 className={styles.mechanicTitle} style={{ color: course.color }}>{course.detailedSyllabus.mechanicsComparison.prestressed.title}</h4>
-                  <p className={styles.mechanicDesc}>{course.detailedSyllabus.mechanicsComparison.prestressed.desc}</p>
-                </div>
-              </div>
-              <ul className={styles.benefitsList}>
-                {course.detailedSyllabus.mechanicsComparison.benefits.map((b, i) => (
-                  <li key={i} className={styles.benefitItem}>
-                    <span className={styles.benefitCheck} style={{ color: course.color }}>✔</span>
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
 
           {/* Cohort Info */}
           <section className={styles.section}>
@@ -210,7 +183,7 @@ export default async function CoursePage({ params }) {
             </div>
 
             <ul className={styles.includesList}>
-              {[
+              {(course.features || [
                 `${course.sessions} live sessions`,
                 `${course.hours} of content`,
                 'Recordings for 1 year',
@@ -219,7 +192,7 @@ export default async function CoursePage({ params }) {
                 'Portfolio building',
                 'Community access',
                 '7-day money-back guarantee',
-              ].map((item) => (
+              ]).map((item) => (
                 <li key={item} className={styles.includesItem}>
                   <span className={styles.includesCheck}>✓</span>
                   {item}
