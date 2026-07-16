@@ -15,7 +15,7 @@ export default function ExpandableDescription({ paragraphs, fallback, className 
 
   return (
     <div className={className}>
-      {/* If expanded, show all. If not, show only the first 3 paragraphs */}
+      {/* If expanded, show all. If not, show only the first 2 paragraphs */}
       {expanded ? (
         paragraphs.map((p, i) => (
           <p key={i} style={{ marginBottom: i !== paragraphs.length - 1 ? '1rem' : 0 }}>
@@ -25,9 +25,9 @@ export default function ExpandableDescription({ paragraphs, fallback, className 
       ) : (
         <>
           {paragraphs.slice(0, 2).map((p, i) => (
-            <p key={i} style={{ marginBottom: i !== 2 ? '1rem' : 0 }}>
+            <p key={i} style={{ marginBottom: i !== 1 ? '1rem' : 0 }}>
               {p}
-              {i === 2 && <span style={{ opacity: 0.7 }}>...</span>}
+              {i === 1 && <span style={{ opacity: 0.7 }}>...</span>}
             </p>
           ))}
         </>
