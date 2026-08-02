@@ -2,6 +2,7 @@
 
 import { supabase } from '@/lib/supabase';
 import { auth } from '@clerk/nextjs/server';
+import { revalidatePath } from 'next/cache';
 
 export async function enrollUserInCourse(courseId, paymentId, paymentMethod, amount) {
   const { userId } = await auth();
@@ -31,9 +32,29 @@ export async function enrollUserInCourse(courseId, paymentId, paymentMethod, amo
       throw error;
     }
 
+    revalidatePath('/', 'layout');
     return { success: true };
   } catch (error) {
     console.error('Enrollment error:', error);
     return { success: false, error: 'Failed to save enrollment.' };
+  }
+}
+
+export async function checkEnrollmentStatus(courseId) {
+  const { userId } = await auth();
+  if (!userId) return { enrolled: false };
+
+  try {
+    const { data } = await supabase
+      .from('enrollments')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('course_id', courseId)
+      .eq('status', 'active')
+      .single();
+    
+    return { enrolled: !!data };
+  } catch (error) {
+    return { enrolled: false };
   }
 }

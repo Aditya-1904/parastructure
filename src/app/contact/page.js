@@ -1,8 +1,8 @@
 import styles from './contact.module.css';
 import { getAllCourses } from '@/data/courses';
 
-export default function ContactPage() {
-  const courses = getAllCourses();
+export default async function ContactPage() {
+  const courses = await getAllCourses();
 
   return (
     <div className={styles.contactContainer}>

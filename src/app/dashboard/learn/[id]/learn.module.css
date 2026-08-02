@@ -9,7 +9,7 @@
 
 .layout {
   display: flex;
-  height: calc(100vh - var(--header-height));
+  height: calc(100dvh - var(--header-height));
   overflow: hidden;
 }
 
@@ -70,7 +70,8 @@
 
 .calDate {
   font-weight: 600;
-  min-width: 45px;
+  width: 50px;
+  flex-shrink: 0;
   color: var(--text-secondary);
 }
 
@@ -152,6 +153,7 @@
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: var(--s-8);
+  flex-shrink: 0;
 }
 
 .instructorSide {
@@ -343,6 +345,9 @@
     border-bottom: 1px solid var(--card-border);
     max-height: 250px;
   }
+  .mainContent {
+    padding: var(--s-4) 1rem;
+  }
   .lectureCard {
     flex-direction: column;
   }
@@ -350,5 +355,13 @@
     width: 100%;
     border-right: none;
     border-bottom: 1px solid var(--card-border);
+  }
+  .actionRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--s-3);
+  }
+  .joinBtn {
+    justify-content: center;
   }
 }

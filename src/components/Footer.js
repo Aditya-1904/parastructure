@@ -4,8 +4,15 @@ import { usePathname } from 'next/navigation';
 import styles from './components.module.css';
 import { getAllCourses } from '@/data/courses';
 
+import { useState, useEffect } from 'react';
+
 export default function Footer() {
-  const courses = getAllCourses();
+  const [courses, setCourses] = useState([]);
+  
+  useEffect(() => {
+    getAllCourses().then(setCourses);
+  }, []);
+
   const year = new Date().getFullYear();
   const pathname = usePathname();
 

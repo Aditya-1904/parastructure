@@ -5,10 +5,12 @@ import Testimonials from '@/components/Testimonials';
 import FAQ from '@/components/FAQ';
 import { getAllCourses, TOOLS } from '@/data/courses';
 import { formatPrice } from '@/config/payment';
+import { auth } from '@clerk/nextjs/server';
 import styles from './page.module.css';
 
-export default function Home() {
-  const courses = getAllCourses();
+export default async function Home() {
+  const courses = await getAllCourses();
+  const { userId } = await auth();
 
   return (
     <div className={styles.page}>
@@ -35,8 +37,17 @@ export default function Home() {
             {' '}Is You.
           </h1>
           <div className={styles.heroButtons}>
-            <Link href="/#programs" className="btnGold">View Programs</Link>
-            <Link href="/contact" className="btnSecondary">Get the Syllabus</Link>
+            {userId ? (
+              <>
+                <Link href="/dashboard" className="btnGold">Go to Dashboard</Link>
+                <Link href="/#programs" className="btnSecondary">Explore Programs</Link>
+              </>
+            ) : (
+              <>
+                <Link href="/#programs" className="btnGold">View Programs</Link>
+                <Link href="/contact" className="btnSecondary">Get the Syllabus</Link>
+              </>
+            )}
           </div>
         </div>
       </section>

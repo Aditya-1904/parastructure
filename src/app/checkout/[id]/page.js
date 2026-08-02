@@ -1,21 +1,50 @@
 'use client';
-import { useState, use } from 'react';
+import { useState, use, useEffect } from 'react';
 import Link from 'next/link';
 import { getCourse } from '@/data/courses';
+import { useUser, RedirectToSignIn } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import { PAYMENT_CONFIG, formatPrice, getEmiAmount } from '@/config/payment';
-import { enrollUserInCourse } from '@/actions/enroll';
+import { enrollUserInCourse, checkEnrollmentStatus } from '@/actions/enroll';
+import { createRazorpayOrder } from '@/actions/payment';
 import styles from './checkout.module.css';
 
 export default function CheckoutPage({ params }) {
   // In Next.js 15/16, params may be a Promise — unwrap with React.use()
   const { id: courseId } = use(params);
-  const course = getCourse(courseId);
-
-  const [form, setForm] = useState({ name: '', email: '', phone: '', linkedin: '', utr: '' });
+  const { isLoaded, isSignedIn, user } = useUser();
+  const [course, setCourse] = useState(null);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', linkedin: '' });
   const [loading, setLoading] = useState(false);
   const [showFallback, setShowFallback] = useState(false);
   const [errors, setErrors] = useState({});
-  const [paymentMethod, setPaymentMethod] = useState('online');
+  const router = useRouter();
+
+  useEffect(() => {
+    getCourse(courseId).then(setCourse);
+  }, [courseId]);
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn && user) {
+      // Auto-fill form
+      setForm(f => ({
+        ...f,
+        name: user.fullName || '',
+        email: user.primaryEmailAddress?.emailAddress || ''
+      }));
+
+      // Check if already enrolled
+      checkEnrollmentStatus(courseId).then(res => {
+        if (res.enrolled) {
+          router.push(`/dashboard/learn/${courseId}`);
+        }
+      });
+    }
+  }, [isLoaded, isSignedIn, user, courseId, router]);
+
+  if (!isLoaded) return <div style={{ padding: '4rem', textAlign: 'center' }}>Loading user details...</div>;
+  if (!isSignedIn) return <RedirectToSignIn />;
+  if (!course) return <div style={{ padding: '4rem', textAlign: 'center' }}>Loading course details...</div>;
 
   if (!course) {
     return (
@@ -30,10 +59,7 @@ export default function CheckoutPage({ params }) {
 
   function validate() {
     const errs = {};
-    if (!form.name.trim()) errs.name = 'Full name is required.';
-    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) errs.email = 'A valid email is required.';
     if (!form.phone.trim() || !/^\+?[0-9]{10,13}$/.test(form.phone.replace(/\s/g, ''))) errs.phone = 'Enter a valid 10-digit phone number.';
-    if (paymentMethod === 'bank' && !form.utr.trim()) errs.utr = 'Transaction ID (UTR) is required.';
     return errs;
   }
 
@@ -47,32 +73,32 @@ export default function CheckoutPage({ params }) {
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
 
-    if (paymentMethod === 'bank') {
-      setLoading(true);
-      // Execute Server Action to save enrollment to Supabase
-      const res = await enrollUserInCourse(course.id, form.utr, 'bank', course.price);
-      
-      if (res.success) {
-        window.location.href = `/contact?enrolled=1&method=bank`;
-      } else {
-        alert(res.error || 'Failed to submit enrollment.');
-        setLoading(false);
-      }
-      return;
-    }
-
     if (!PAYMENT_CONFIG.isLive) {
       setShowFallback(true);
       return;
     }
 
     // ========================================================
-    // RAZORPAY INTEGRATION — goes live once key is set
+    // RAZORPAY INTEGRATION — SECURE SERVER SIDE ORDER
     // ========================================================
     setLoading(true);
+
+    const orderRes = await createRazorpayOrder(course.id);
+    
+    if (!orderRes.success) {
+      if (orderRes.error === 'PAYMENT_GATEWAY_NOT_CONFIGURED') {
+        setShowFallback(true);
+      } else {
+        alert("Payment Error: " + orderRes.error);
+      }
+      setLoading(false);
+      return;
+    }
+
     const options = {
       key: PAYMENT_CONFIG.razorpayKeyId,
-      amount: course.price * 100, // paise
+      amount: orderRes.amount, // Secured amount from server
+      order_id: orderRes.orderId, // Secure Order ID
       currency: PAYMENT_CONFIG.currency,
       name: PAYMENT_CONFIG.company,
       description: course.title,
@@ -88,7 +114,7 @@ export default function CheckoutPage({ params }) {
       },
       theme: { color: '#C8A86B' },
       handler: function (response) {
-        // Payment success — redirect to thank you page
+        // Payment success — Webhook handles DB enrollment, we just redirect
         window.location.href = `/contact?enrolled=1&payment_id=${response.razorpay_payment_id}`;
       },
       modal: {
@@ -167,51 +193,32 @@ export default function CheckoutPage({ params }) {
             You're one step away from joining India's most advanced bridge engineering cohort.
           </p>
 
-          <div className={styles.paymentToggle}>
-            <button 
-              type="button" 
-              className={`${styles.toggleBtn} ${paymentMethod === 'online' ? styles.toggleBtnActive : ''}`}
-              onClick={() => { setPaymentMethod('online'); setErrors({}); }}
-            >
-              Pay Online Instantly
-            </button>
-            <button 
-              type="button" 
-              className={`${styles.toggleBtn} ${paymentMethod === 'bank' ? styles.toggleBtnActive : ''}`}
-              onClick={() => { setPaymentMethod('bank'); setErrors({}); }}
-            >
-              Direct Bank Transfer
-            </button>
-          </div>
-
           <form className={styles.form} onSubmit={handlePay} noValidate>
             <div className={styles.formGroup}>
-              <label htmlFor="name" className={styles.label}>Full Name *</label>
+              <label htmlFor="name" className={styles.label}>Full Name (From Profile) *</label>
               <input
                 id="name"
                 name="name"
                 type="text"
-                className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
-                placeholder="e.g. Rahul Sharma"
+                className={`${styles.input}`}
                 value={form.name}
-                onChange={handleChange}
+                disabled
+                style={{ opacity: 0.7, cursor: 'not-allowed', background: 'rgba(255,255,255,0.05)' }}
               />
-              {errors.name && <span className={styles.errorMsg}>{errors.name}</span>}
             </div>
 
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
-                <label htmlFor="email" className={styles.label}>Email Address *</label>
+                <label htmlFor="email" className={styles.label}>Email Address (From Profile) *</label>
                 <input
                   id="email"
                   name="email"
                   type="email"
-                  className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
-                  placeholder="you@example.com"
+                  className={`${styles.input}`}
                   value={form.email}
-                  onChange={handleChange}
+                  disabled
+                  style={{ opacity: 0.7, cursor: 'not-allowed', background: 'rgba(255,255,255,0.05)' }}
                 />
-                {errors.email && <span className={styles.errorMsg}>{errors.email}</span>}
               </div>
 
               <div className={styles.formGroup}>
@@ -241,45 +248,6 @@ export default function CheckoutPage({ params }) {
                 onChange={handleChange}
               />
             </div>
-
-            {paymentMethod === 'bank' && (
-              <>
-                <div className={styles.bankDetailsBox}>
-                  <h3>Company Bank Details</h3>
-                  <div className={styles.bankRow}>
-                    <span className={styles.bankLabel}>Beneficiary Name</span>
-                    <span className={styles.bankValue}>Parastructure Pvt. Ltd.</span>
-                  </div>
-                  <div className={styles.bankRow}>
-                    <span className={styles.bankLabel}>Account Number</span>
-                    <span className={styles.bankValue}>1234 5678 9012</span>
-                  </div>
-                  <div className={styles.bankRow}>
-                    <span className={styles.bankLabel}>IFSC Code</span>
-                    <span className={styles.bankValue}>HDFC0001234</span>
-                  </div>
-                  <div className={styles.bankRow}>
-                    <span className={styles.bankLabel}>Bank Name</span>
-                    <span className={styles.bankValue}>HDFC Bank</span>
-                  </div>
-                </div>
-
-                <div className={styles.formGroup}>
-                  <label htmlFor="utr" className={styles.label}>Transaction ID (UTR) *</label>
-                  <input
-                    id="utr"
-                    name="utr"
-                    type="text"
-                    className={`${styles.input} ${errors.utr ? styles.inputError : ''}`}
-                    placeholder="e.g. UTR1234567890"
-                    value={form.utr}
-                    onChange={handleChange}
-                  />
-                  {errors.utr && <span className={styles.errorMsg}>{errors.utr}</span>}
-                </div>
-              </>
-            )}
-
             <div className={styles.payButton}>
               <button
                 type="submit"
@@ -290,14 +258,10 @@ export default function CheckoutPage({ params }) {
               >
                 {loading 
                   ? 'Processing...' 
-                  : paymentMethod === 'bank' 
-                    ? `Submit Details for ${formatPrice(course.price)}` 
-                    : `Pay ${formatPrice(course.price)} Securely`}
+                  : `Pay ${formatPrice(course.price)} Securely`}
               </button>
               <p className={styles.payNote}>
-                {paymentMethod === 'bank' 
-                  ? '🔒 We will verify your transaction manually and enroll you within 24 hours.' 
-                  : '🔒 Secured by Razorpay · UPI · Cards · Net Banking · EMI'}
+                🔒 Secured by Razorpay · UPI · Cards · Net Banking · EMI
               </p>
             </div>
           </form>

@@ -5,13 +5,14 @@ import { getCourse } from '@/data/courses';
 import { formatPrice } from '@/config/payment';
 import { notFound } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
+import { supabase } from '@/lib/supabase';
 import styles from './course.module.css';
 
 import ExpandableDescription from '@/components/ExpandableDescription';
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const course = getCourse(id);
+  const course = await getCourse(id);
   if (!course) return {};
   return {
     title: `${course.title} | Parastructure`,
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }) {
 
 export default async function CoursePage({ params }) {
   const { id } = await params;
-  const course = getCourse(id);
+  const course = await getCourse(id);
   
   if (!course) {
     notFound();
@@ -29,6 +30,21 @@ export default async function CoursePage({ params }) {
 
   const { userId } = await auth();
   const emiAmount = Math.ceil(course.price / course.emiMonths);
+
+  let isEnrolled = false;
+  if (userId) {
+    const { data: enrollment } = await supabase
+      .from('enrollments')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('course_id', id)
+      .eq('status', 'active')
+      .single();
+    
+    if (enrollment) {
+      isEnrolled = true;
+    }
+  }
 
   return (
     <div className={styles.page}>
@@ -87,60 +103,66 @@ export default async function CoursePage({ params }) {
           )}
 
           {/* Outcomes */}
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>What You'll Be Able to Do:</h2>
-            <div className={styles.outcomesGrid}>
-              {course.outcomes.map((o, i) => (
-                <div key={i} className={styles.outcomeCard}>
-                  <span className={styles.outcomeCheck}>✓</span>
-                  <span>{o}</span>
-                </div>
-              ))}
-            </div>
-          </section>
+          {course.outcomes && course.outcomes.length > 0 && (
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>What You'll Be Able to Do:</h2>
+              <div className={styles.outcomesGrid}>
+                {course.outcomes.map((o, i) => (
+                  <div key={i} className={styles.outcomeCard}>
+                    <span className={styles.outcomeCheck}>✓</span>
+                    <span>{o}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Target Audience & Tools */}
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>Requirements & Target Audience</h2>
-            <ul className={styles.audienceList}>
-              {course.targetAudience.map((a, i) => (
-                <li key={i} className={styles.audienceItem}>
-                  <span className={styles.audienceDot} style={{ background: course.color }}/>
-                  {a}
-                </li>
-              ))}
-            </ul>
-          </section>
+          {course.targetAudience && course.targetAudience.length > 0 && (
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>Requirements & Target Audience</h2>
+              <ul className={styles.audienceList}>
+                {course.targetAudience.map((a, i) => (
+                  <li key={i} className={styles.audienceItem}>
+                    <span className={styles.audienceDot} style={{ background: course.color }}/>
+                    {a}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {/* Curriculum */}
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>Course content</h2>
-            <div className={styles.curriculumStats}>
-              {course.modules.length} sections • {course.sessions} sessions • {course.hours} total length
-            </div>
-            <div className={styles.modules}>
-              {course.modules.map((mod, i) => (
-                <details key={i} className={styles.moduleItem}>
-                  <summary className={styles.moduleSummary}>
-                    <span className={styles.moduleToggle}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-                    </span>
-                    <span className={styles.moduleTitle}>
-                      {String(i + 1).padStart(2, '0')}. {mod.title}
-                    </span>
-                  </summary>
-                  <ul className={styles.topicList}>
-                    {mod.topics.map((t, j) => (
-                      <li key={j} className={styles.topicItem}>
-                        <span className={styles.topicDot}/>
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
-                </details>
-              ))}
-            </div>
-          </section>
+          {course.modules && course.modules.length > 0 && (
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>Course content</h2>
+              <div className={styles.curriculumStats}>
+                {course.modules.length} sections • {course.sessions} sessions • {course.hours} total length
+              </div>
+              <div className={styles.modules}>
+                {course.modules.map((mod, i) => (
+                  <details key={i} className={styles.moduleItem}>
+                    <summary className={styles.moduleSummary}>
+                      <span className={styles.moduleToggle}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                      </span>
+                      <span className={styles.moduleTitle}>
+                        {String(i + 1).padStart(2, '0')}. {mod.title}
+                      </span>
+                    </summary>
+                    <ul className={styles.topicList}>
+                      {mod.topics.map((t, j) => (
+                        <li key={j} className={styles.topicItem}>
+                          <span className={styles.topicDot}/>
+                          {t}
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                ))}
+              </div>
+            </section>
+          )}
 
 
 
@@ -164,10 +186,12 @@ export default async function CoursePage({ params }) {
           </section>
 
           {/* Testimonials */}
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>Student feedback</h2>
-            <Testimonials items={course.testimonials} />
-          </section>
+          {course.testimonials && course.testimonials.length > 0 && (
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>Student feedback</h2>
+              <Testimonials items={course.testimonials} />
+            </section>
+          )}
 
         </div>
 
@@ -175,11 +199,21 @@ export default async function CoursePage({ params }) {
         <aside className={styles.sidebar}>
           <div className={styles.pricingCard}>
             <div className={styles.pricingTop} style={{ '--course-color': course.color }}>
-              <div className={styles.pricingLabel}>Program Fee</div>
-              <div className={styles.price}>{formatPrice(course.price)}</div>
-              <div className={styles.emiLine}>
-                or <strong>{formatPrice(emiAmount)}/mo</strong> × {course.emiMonths} months
-              </div>
+              {isEnrolled ? (
+                <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+                  <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎉</div>
+                  <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>You own this course!</h3>
+                  <p style={{ opacity: 0.9, fontSize: '0.9rem' }}>You are fully enrolled in this program.</p>
+                </div>
+              ) : (
+                <>
+                  <div className={styles.pricingLabel}>Program Fee</div>
+                  <div className={styles.price}>{formatPrice(course.price)}</div>
+                  <div className={styles.emiLine}>
+                    or <strong>{formatPrice(emiAmount)}/mo</strong> × {course.emiMonths} months
+                  </div>
+                </>
+              )}
             </div>
 
             <ul className={styles.includesList}>
@@ -201,18 +235,30 @@ export default async function CoursePage({ params }) {
             </ul>
 
             <div className={styles.pricingCardButtons}>
-              <Link
-                href={`/checkout/${course.id}`}
-                className="btnGold"
-                style={{ display: 'block', width: '100%', textAlign: 'center' }}
-              >
-                Enroll Now
-              </Link>
+              {isEnrolled ? (
+                <Link
+                  href={`/dashboard/learn/${course.id}`}
+                  className="btnGold"
+                  style={{ display: 'block', width: '100%', textAlign: 'center' }}
+                >
+                  Go to Course Dashboard →
+                </Link>
+              ) : (
+                <Link
+                  href={`/checkout/${course.id}`}
+                  className="btnGold"
+                  style={{ display: 'block', width: '100%', textAlign: 'center' }}
+                >
+                  Enroll Now
+                </Link>
+              )}
             </div>
 
-            <p className={styles.guarantee}>
-              🔒 Secure payment via Razorpay · UPI, Cards, Net Banking, EMI
-            </p>
+            {!isEnrolled && (
+              <p className={styles.guarantee}>
+                🔒 Secure payment via Razorpay · UPI, Cards, Net Banking, EMI
+              </p>
+            )}
           </div>
         </aside>
 

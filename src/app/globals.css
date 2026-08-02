@@ -106,6 +106,10 @@ button {
   background: none;
 }
 
+input, textarea, select {
+  font-family: inherit;
+}
+
 img, video {
   max-width: 100%;
   display: block;

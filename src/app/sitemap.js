@@ -1,10 +1,10 @@
 import { getAllCourses } from '@/data/courses';
 
-export default function sitemap() {
-  const baseUrl = 'https://www.parastructure.com';
+export default async function sitemap() {
+  const baseUrl = 'https://parastructure.com';
 
   // Get all dynamically published courses
-  const courses = getAllCourses();
+  const courses = await getAllCourses();
   
   const courseUrls = courses.map((course) => ({
     url: `${baseUrl}/courses/${course.id}`,

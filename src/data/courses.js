@@ -416,12 +416,89 @@ const courses = {
   },
 };
 
-export default courses;
+import { supabase } from '@/lib/supabase';
 
-export function getCourse(id) {
-  return courses[id] || null;
+export function mapCourse(dbCourse) {
+  if (!dbCourse) return null;
+  const staticCourse = courses[dbCourse.id] || {};
+  
+  const defaultFeatures = [
+    '50+ Hours of Practical Design Training',
+    'Interactive Live Doubt-Solving',
+    'Structured Study Material & Resources',
+    'Hands-on Design Assignments',
+    'Student Community for Learning & Discussion',
+    '1-Year Access to Session Recordings',
+  ];
+  const defaultOutcomes = [
+    'Master industry-standard engineering workflows and design calculations',
+    'Perform complete 3D structural analysis using industry software',
+    'Build a professional design portfolio for technical interviews',
+    'Qualify for core structural design and consulting roles',
+  ];
+  const defaultAudience = [
+    'Civil Engineering students and recent graduates',
+    'Site engineers looking to transition into office design roles',
+    'Working professionals targeting infrastructure consultancies',
+  ];
+  const defaultTools = ['MIDAS Civil', 'STAAD Pro', 'Autodesk Revit', 'AutoCAD'];
+
+  return {
+    id: dbCourse.id,
+    isPublished: dbCourse.is_published,
+    title: dbCourse.title || 'Untitled Course',
+    shortTitle: dbCourse.short_title || dbCourse.title || 'Course',
+    image: dbCourse.image || staticCourse.image || '/course_rcc.png',
+    tagline: dbCourse.tagline || staticCourse.tagline || 'Master practical engineering skills with industry experts.',
+    description: dbCourse.description || staticCourse.description || 'A comprehensive structural engineering program designed to take you from theory to job-ready deliverables.',
+    duration: dbCourse.duration || staticCourse.duration || 'Self-paced',
+    hours: dbCourse.hours || staticCourse.hours || '20+ Hours',
+    sessions: dbCourse.sessions || staticCourse.sessions || 'Live & Recorded',
+    level: dbCourse.level || staticCourse.level || 'All Levels',
+    mode: dbCourse.mode || staticCourse.mode || 'Online Live',
+    price: dbCourse.price !== undefined && dbCourse.price !== null ? dbCourse.price : (staticCourse.price || 49999),
+    originalPrice: dbCourse.original_price || staticCourse.originalPrice || dbCourse.price || 49999,
+    seatsLeft: dbCourse.seats_left !== undefined && dbCourse.seats_left !== null ? dbCourse.seats_left : 40,
+    rating: dbCourse.rating || staticCourse.rating || 5,
+    reviews: dbCourse.reviews || staticCourse.reviews || 12,
+    instructor: dbCourse.instructor || staticCourse.instructor || 'Parastructure Faculty',
+    prerequisites: dbCourse.prerequisites || staticCourse.prerequisites || [],
+    syllabus: dbCourse.syllabus || staticCourse.syllabus || [],
+    
+    // Merge static and styling fields with robust defaults
+    longDescription: staticCourse.longDescription || [
+      "Let's be totally honest. Companies do not hire you because you have a degree; they hire you because you can solve their design problems.",
+      "This program is designed to bridge the gap between academic theory and industry practice through hands-on modeling and manual design calculations.",
+      "By the end of this course, you will have built a professional-grade portfolio containing complete design models and deliverables to showcase in interviews."
+    ],
+    features: (staticCourse.features && staticCourse.features.length > 0) ? staticCourse.features : defaultFeatures,
+    modules: staticCourse.modules || [],
+    outcomes: (staticCourse.outcomes && staticCourse.outcomes.length > 0) ? staticCourse.outcomes : defaultOutcomes,
+    targetAudience: (staticCourse.targetAudience && staticCourse.targetAudience.length > 0) ? staticCourse.targetAudience : defaultAudience,
+    tools: (staticCourse.tools && staticCourse.tools.length > 0) ? staticCourse.tools : defaultTools,
+    testimonials: (staticCourse.testimonials && staticCourse.testimonials.length > 0) ? staticCourse.testimonials : [TESTIMONIALS[0], TESTIMONIALS[1]],
+    faqs: (staticCourse.faqs && staticCourse.faqs.length > 0) ? staticCourse.faqs : FAQS,
+    mechanicsComparison: staticCourse.mechanicsComparison || null,
+    emiMonths: staticCourse.emiMonths || 6,
+    color: staticCourse.color || '#C8A86B',
+    language: staticCourse.language || 'Hindi & English',
+    badge: staticCourse.badge || 'Professional Track',
+    badgeType: staticCourse.badgeType || 'primary',
+  };
 }
 
-export function getAllCourses() {
-  return Object.values(courses).filter(course => course.isPublished);
+export async function getCourse(id) {
+  const { data, error } = await supabase.from('courses').select('*').eq('id', id).single();
+  if (error || !data) return null;
+  return mapCourse(data);
 }
+
+export async function getAllCourses() {
+  const { data, error } = await supabase.from('courses').select('*').eq('is_published', true).order('created_at', { ascending: true });
+  if (error || !data) return [];
+  return data.map(mapCourse);
+}
+
+// Exporting the hardcoded courses object is no longer recommended, 
+// use getAllCourses() instead.
+export default {};
