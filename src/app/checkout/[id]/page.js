@@ -5,7 +5,7 @@ import { getCourse } from '@/data/courses';
 import { useUser, RedirectToSignIn } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { PAYMENT_CONFIG, formatPrice, getEmiAmount } from '@/config/payment';
-import { enrollUserInCourse, checkEnrollmentStatus } from '@/actions/enroll';
+import { temporaryDirectEnroll, checkEnrollmentStatus } from '@/actions/enroll';
 import { createRazorpayOrder } from '@/actions/payment';
 import styles from './checkout.module.css';
 
@@ -113,9 +113,21 @@ export default function CheckoutPage({ params }) {
         linkedin: form.linkedin,
       },
       theme: { color: '#C8A86B' },
-      handler: function (response) {
-        // Payment success — Webhook handles DB enrollment, we just redirect
-        window.location.href = `/contact?enrolled=1&payment_id=${response.razorpay_payment_id}`;
+      handler: async function (response) {
+        try {
+          // Temporary direct enrollment until webhook is configured
+          const res = await temporaryDirectEnroll(course.id, response.razorpay_payment_id, orderRes.amount / 100);
+          
+          if (!res.success) {
+            throw new Error(res.error || 'Failed to enroll');
+          }
+          
+          window.location.href = `/dashboard/learn/${course.id}?success=1`;
+        } catch (err) {
+          console.error('Enrollment error:', err);
+          alert('Payment succeeded but enrollment failed. Please contact support.');
+          window.location.href = '/dashboard';
+        }
       },
       modal: {
         ondismiss: () => setLoading(false),

@@ -1,5 +1,6 @@
 import { clerkClient } from '@clerk/nextjs/server';
 import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { getCourse, getAllCourses } from '@/data/courses';
 import { revalidatePath } from 'next/cache';
 import styles from '@/app/dashboard/dashboard.module.css';
@@ -26,8 +27,8 @@ export default async function AdminUsers() {
 
     if (!userId || !courseId) return;
 
-    // Insert or update an active enrollment
-    const { error: insertError } = await supabase
+    // Insert or update an active enrollment using Admin Client to bypass RLS
+    const { error: insertError } = await supabaseAdmin
       .from('enrollments')
       .upsert({
         user_id: userId,
@@ -35,10 +36,12 @@ export default async function AdminUsers() {
         status: 'active',
         payment_method: 'admin_grant',
         payment_id: 'MANUAL_GRANT',
+        amount: 0,
       }, { onConflict: 'user_id, course_id' });
 
     if (insertError) {
       console.error('Failed to grant access:', insertError);
+      throw new Error(`Failed to grant access in Supabase: ${insertError.message} (Code: ${insertError.code})`);
     } else {
       revalidatePath('/admin/users');
     }

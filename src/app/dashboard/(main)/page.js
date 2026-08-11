@@ -3,12 +3,14 @@ import Link from 'next/link';
 import { getCourse } from '@/data/courses';
 import { supabase } from '@/lib/supabase';
 import styles from '@/app/dashboard/dashboard.module.css';
+import CertificateButton from '@/components/CertificateButton';
 
 export default async function DashboardPage() {
   const user = await currentUser();
   if (!user) return null;
 
   let myCourses = [];
+  let totalSubmissions = 0;
 
   // Try to fetch real enrollments from Supabase
   const { data: enrollments, error } = await supabase
@@ -20,6 +22,13 @@ export default async function DashboardPage() {
     console.error('Supabase error fetching enrollments:', error.message);
   }
   
+  // Fetch global submissions for this user (for badges)
+  const { data: allSubmissions } = await supabase
+    .from('assignment_submissions')
+    .select('id, module_id')
+    .eq('user_id', user.id);
+  totalSubmissions = (allSubmissions || []).length;
+
   // Map course IDs to actual course data, inject status, and calculate dynamic progress
   const mappedCourses = await Promise.all(
     (enrollments || []).map(async (e) => {
@@ -40,14 +49,11 @@ export default async function DashboardPage() {
         // Count completed lectures (those with recording links or explicitly marked completed)
         const completedLectures = allModules.filter(m => m.type !== 'assignment' && (m.status === 'completed' || (m.recording_link && m.recording_link.trim() !== ''))).length;
 
-        // Count submitted assignments for this user
-        const { data: submissions } = await supabase
-          .from('assignment_submissions')
-          .select('id')
-          .eq('user_id', user.id);
-        const submittedCount = (submissions || []).length;
+        // Count submitted assignments FOR THIS SPECIFIC COURSE
+        const courseModuleIds = allModules.map(m => m.id);
+        const courseSubmissions = (allSubmissions || []).filter(sub => courseModuleIds.includes(sub.module_id)).length;
 
-        completedCount = completedLectures + submittedCount;
+        completedCount = completedLectures + courseSubmissions;
       }
 
       const progressPercent = totalModules > 0 ? Math.min(100, Math.round((completedCount / totalModules) * 100)) : 0;
@@ -57,11 +63,48 @@ export default async function DashboardPage() {
   );
   myCourses = mappedCourses.filter(Boolean);
 
+  // Badge Logic
+  const hasFirstSteps = myCourses.length > 0;
+  const hasActionTaker = totalSubmissions > 0;
+  const hasMasterEngineer = myCourses.some(c => c.progressPercent === 100);
+
+  // Format date for certificate
+  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
   return (
     <>
       <section className={styles.welcomeSection}>
         <h1 className={styles.greeting}>Welcome back, {user?.firstName || 'Engineer'} 🚀</h1>
         <p className={styles.subtitle}>Let's build something extraordinary today. Pick up where you left off below.</p>
+      </section>
+
+      {/* Gamification: Badges Section */}
+      <section style={{ marginBottom: '3rem' }}>
+        <h2 className={styles.sectionTitle}>My Achievements</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          
+          {/* Badge 1: First Steps */}
+          <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--card-border)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', opacity: hasFirstSteps ? 1 : 0.5, filter: hasFirstSteps ? 'none' : 'grayscale(100%)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🎓</div>
+            <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>First Steps</h4>
+            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Enrolled in your first elite program.</p>
+          </div>
+
+          {/* Badge 2: Action Taker */}
+          <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--card-border)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', opacity: hasActionTaker ? 1 : 0.5, filter: hasActionTaker ? 'none' : 'grayscale(100%)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>📝</div>
+            <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>Action Taker</h4>
+            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Submitted your first engineering assignment.</p>
+          </div>
+
+          {/* Badge 3: Master Engineer */}
+          <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--card-border)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', opacity: hasMasterEngineer ? 1 : 0.5, filter: hasMasterEngineer ? 'none' : 'grayscale(100%)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🏆</div>
+            <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>Master Engineer</h4>
+            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Completed a program with 100% progress.</p>
+          </div>
+
+        </div>
       </section>
 
       <section>
@@ -94,9 +137,11 @@ export default async function DashboardPage() {
                         Access Course Portal
                       </Link>
                       {course.progressPercent === 100 && (
-                        <a href="/certificate_template.pdf" target="_blank" rel="noopener noreferrer" style={{ textAlign: 'center', display: 'block', background: 'rgba(200, 168, 107, 0.15)', border: '1px solid var(--accent-gold)', color: 'var(--accent-gold)', padding: '12px', borderRadius: '8px', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem' }}>
-                          🏆 Download Certificate
-                        </a>
+                        <CertificateButton 
+                          studentName={`${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Engineer'}
+                          courseName={course.title}
+                          completionDate={today}
+                        />
                       )}
                     </div>
                   ) : (

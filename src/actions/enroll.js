@@ -58,3 +58,38 @@ export async function checkEnrollmentStatus(courseId) {
     return { enrolled: false };
   }
 }
+
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
+
+export async function temporaryDirectEnroll(courseId, paymentId, amount) {
+  const { userId } = await auth();
+  if (!userId) return { success: false, error: 'Not logged in' };
+
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('enrollments')
+      .insert([
+        {
+          user_id: userId,
+          course_id: courseId,
+          payment_id: paymentId,
+          payment_method: 'razorpay',
+          amount: amount,
+          status: 'active'
+        }
+      ]);
+
+    if (error) {
+      if (error.code === '23505') {
+        return { success: true }; // Already enrolled
+      }
+      throw error;
+    }
+
+    revalidatePath('/', 'layout');
+    return { success: true };
+  } catch (err) {
+    console.error('Temporary direct enroll failed:', err);
+    return { success: false, error: err.message };
+  }
+}

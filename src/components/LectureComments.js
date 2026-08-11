@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { deleteComment, postComment } from '@/actions/comments';
 
 export default function LectureComments({ moduleId, userId, userName, isAdmin }) {
   const [comments, setComments] = useState([]);
@@ -26,18 +27,18 @@ export default function LectureComments({ moduleId, userId, userName, isAdmin })
     setLoading(false);
   }
 
-  async function handleDelete(commentId) {
+  async function handleDelete(commentId, authorId) {
     if (!confirm('Are you sure you want to delete this comment?')) return;
     
-    const { error } = await supabase
-      .from('module_comments')
-      .delete()
-      .eq('id', commentId);
+    // Optimistic UI update
+    const previousComments = [...comments];
+    setComments(comments.filter(c => c.id !== commentId));
+    
+    const { success, error } = await deleteComment(commentId, authorId);
       
-    if (!error) {
-      setComments(comments.filter(c => c.id !== commentId));
-    } else {
-      alert("Failed to delete comment. " + error.message);
+    if (!success) {
+      setComments(previousComments); // revert
+      alert("Failed to delete comment. " + error);
     }
   }
 
@@ -60,18 +61,14 @@ export default function LectureComments({ moduleId, userId, userName, isAdmin })
       content: newComment.trim()
     };
     
-    const { data, error } = await supabase
-      .from('module_comments')
-      .insert(payload)
-      .select()
-      .single();
+    const { success, data, error } = await postComment(payload);
       
-    if (data) {
+    if (success && data) {
       setComments([data, ...comments]);
       setNewComment('');
       setLastPostTime(Date.now());
-    } else if (error) {
-      alert("Failed to post comment. " + error.message);
+    } else {
+      alert("Failed to post comment. " + error);
     }
     setSubmitting(false);
   }
@@ -141,7 +138,7 @@ export default function LectureComments({ moduleId, userId, userName, isAdmin })
                   </div>
                   {(isAdmin || comment.user_id === userId) && (
                     <button 
-                      onClick={() => handleDelete(comment.id)}
+                      onClick={() => handleDelete(comment.id, comment.user_id)}
                       style={{ 
                         background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer', 
                         fontSize: '0.8rem', padding: '4px 8px', borderRadius: '4px',

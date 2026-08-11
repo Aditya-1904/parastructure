@@ -414,6 +414,87 @@ const courses = {
       }
     }
   },
+
+  'industrial-steel': {
+    id: 'industrial-steel',
+    isPublished: true,
+    title: 'Industrial Steel Building Design Program',
+    shortTitle: 'Industrial Steel',
+    image: '/course_steel.png',
+    tagline: 'Learn how industrial steel buildings are designed in professional consultancy firms through a comprehensive program that combines engineering principles, Indian design standards, practical design exercises, and a complete real-world project. Build the confidence and technical skills needed to work on industrial structural design projects.',
+    description: 'Learn how industrial steel buildings are designed in professional consultancy firms through a comprehensive program that combines engineering principles, Indian design standards, practical design exercises, and a complete real-world project.',
+    longDescription: [
+      'A civil engineering degree may help you get shortlisted, but practical design skills are what get you hired. Today, industries across India are rapidly expanding with new factories, warehouses, manufacturing plants, and logistics facilities, creating a growing demand for structural engineers who can design safe and economical steel buildings.',
+      'This program is designed to bridge the gap between classroom learning and real consultancy work in just 3–4 months. Instead of focusing on theory alone, you\'ll follow the complete workflow used by professional structural engineers on live projects.',
+      '[Study Project Drawings] → [Build STAAD Model] → [Design Steel Members] → [Prepare Connection Details]',
+      'Working on a complete industrial building project from scratch, you\'ll learn how to interpret client drawings, create a structural analysis model, apply design loads, design primary and secondary steel members as per Indian Standards, optimize the structure, and prepare practical connection details and structural drawings.',
+      'By the end of the program, you\'ll have a complete industry-style project that demonstrates your design capabilities and strengthens your portfolio for interviews. More importantly, you\'ll develop the confidence to understand consultancy workflows and take on real-world industrial steel building projects.'
+    ],
+    duration: '4 Months',
+    hours: '60+ Hours',
+    sessions: '32 Live Sessions',
+    level: 'Intermediate',
+    mode: 'Online Live',
+    language: 'Hindi & English',
+    price: 34999,
+    emiMonths: 6,
+    badge: 'New Track',
+    badgeType: 'secondary',
+    color: '#4A90A4',
+    modules: [
+      {
+        title: 'Module 1: Project Kickoff & Design Basis',
+        topics: [
+          'Industrial Building Fundamentals',
+          'Project Planning & Design Basis',
+          'Codes, Materials & Building Planning',
+          'Structural Modelling Fundamentals'
+        ]
+      },
+      {
+        title: 'Module 2: Loading & Structural Analysis',
+        topics: [
+          'Gravity & Environmental Loads',
+          'Load Application & Combinations',
+          'Structural Analysis & Result Interpretation',
+          'Model Verification & Validation'
+        ]
+      },
+      {
+        title: 'Module 3: Steel Member Design',
+        topics: [
+          'Primary Steel Member Design',
+          'Crane Girder & Secondary Member Design',
+          'Code-Based Steel Design',
+          'Design Optimization'
+        ]
+      },
+      {
+        title: 'Module 4: Connections & Detailing',
+        topics: [
+          'Steel Connection Design',
+          'Anchor Bolt & Connection Calculations',
+          'Structural Drawings & Detailing',
+          'Design Review & Industry Practices'
+        ]
+      }
+    ],
+    outcomes: [
+      'Master Industrial Building Design from Scratch',
+      'Develop Professional Models',
+      'Perform Practical Steel Design',
+      'Understand Indian Steel Design Codes'
+    ],
+    targetAudience: [
+      'Unemployed Civil Engineering Graduates',
+      'Site Engineers looking for a Design Office Career',
+      'CAD Draftsmen & Detailers',
+      'Final Year UG/PG Students',
+      'Working Structural Engineers'
+    ],
+    tools: ['STAAD Pro', 'AutoCAD', 'MS Excel'],
+    testimonials: [TESTIMONIALS[0], TESTIMONIALS[2]],
+  },
 };
 
 import { supabase } from '@/lib/supabase';

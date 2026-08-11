@@ -98,14 +98,14 @@ export default function Header() {
         <div className={styles.mobileCtas}>
           {isLoaded && !isSignedIn && (
             <div style={{ display: 'flex', gap: '1rem', width: '100%', marginTop: '1rem' }}>
-              <Link href="/sign-in" className="btnSecondary" style={{ flex: 1, textAlign: 'center' }} onClick={closeMenu}>Login</Link>
-              <Link href="/sign-up" className="btnGold" style={{ flex: 1, textAlign: 'center' }} onClick={closeMenu}>Sign Up</Link>
+              <Link href="/sign-in" className="btnSecondary" style={{ flex: 1, textAlign: 'center', padding: '8px 16px', fontSize: '0.875rem' }} onClick={closeMenu}>Login</Link>
+              <Link href="/sign-up" className="btnGold" style={{ flex: 1, textAlign: 'center', padding: '8px 16px', fontSize: '0.875rem' }} onClick={closeMenu}>Sign Up</Link>
             </div>
           )}
           {isLoaded && isSignedIn && (
             <div style={{ display: 'flex', gap: '1rem', width: '100%', marginTop: '1rem', justifyContent: 'center' }}>
               <UserButton afterSignOutUrl="/" />
-              <Link href="/dashboard" className="btnGold" style={{ flex: 1, textAlign: 'center' }} onClick={closeMenu}>Dashboard</Link>
+              <Link href="/dashboard" className="btnSecondary" style={{ flex: 1, textAlign: 'center', padding: '8px 16px', fontSize: '0.875rem' }} onClick={closeMenu}>Dashboard</Link>
             </div>
           )}
         </div>

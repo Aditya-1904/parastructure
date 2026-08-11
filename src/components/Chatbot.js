@@ -1,56 +1,145 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { CHATBOT_RULES } from '@/data/chatbotRules';
+import { usePathname } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
 import styles from './Chatbot.module.css';
 
 export default function Chatbot() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   
-  // State 1: Conversation History
-  // We start by injecting the first bot message
-  const [messages, setMessages] = useState([
-    { sender: 'bot', text: CHATBOT_RULES['start'].message }
-  ]);
+  // State for conversation history
+  const [messages, setMessages] = useState([]);
+  const [inputValue, setInputValue] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   
-  // State 2: Current Options to display
-  const [currentOptions, setCurrentOptions] = useState(CHATBOT_RULES['start'].options);
+  // Quick Action Chips State
+  const [showChips, setShowChips] = useState(true);
 
-  // Reference to auto-scroll the chat
+  // Lead generation state
+  const [isLeadGenMode, setIsLeadGenMode] = useState(false);
+  const [leadGenData, setLeadGenData] = useState({ name: '', phone: '' });
+  const [leadGenSubmitted, setLeadGenSubmitted] = useState(false);
+
   const chatBodyRef = useRef(null);
 
-  // Auto-scroll to bottom when messages update
+  // Determine initial greeting based on pathname
+  const getInitialGreeting = () => {
+    let greeting = "Hi there! 👋 I'm the ParaStructure assistant. Ask me anything about our cohorts.";
+    if (pathname?.includes('/courses/rcc')) {
+      greeting = "Hi there! 👋 Let me know if you have any questions specifically about the RCC Bridge cohort!";
+    } else if (pathname?.includes('/courses/steel')) {
+      greeting = "Hi there! 👋 Let me know if you have any questions specifically about the Steel Bridge cohort!";
+    } else if (pathname?.includes('/courses/psc')) {
+      greeting = "Hi there! 👋 Let me know if you have any questions specifically about the PSC Bridge cohort!";
+    } else if (pathname?.includes('/courses/industrial-steel')) {
+      greeting = "Hi there! 👋 Let me know if you have any questions specifically about the Industrial Steel Building cohort!";
+    }
+    return greeting;
+  };
+
+  // Initialize from sessionStorage on mount
   useEffect(() => {
+    // Make the session key path-agnostic so history is preserved across page navigations
+    const saved = sessionStorage.getItem('chatbot_messages_global');
+    if (saved) {
+      setMessages(JSON.parse(saved));
+      setShowChips(false); // If history exists, hide chips
+    } else {
+      setMessages([
+        { sender: 'bot', text: getInitialGreeting() }
+      ]);
+      setShowChips(true);
+    }
+  }, [pathname]);
+
+  // Save to sessionStorage whenever messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      sessionStorage.setItem('chatbot_messages_global', JSON.stringify(messages));
+    }
+    // Auto-scroll to bottom
     if (chatBodyRef.current) {
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
-  }, [messages, isOpen]);
+  }, [messages, isOpen, isTyping, isLeadGenMode]);
 
   const toggleChat = () => setIsOpen(!isOpen);
 
-  // This is the core logic: What happens when a user clicks a button?
-  const handleOptionClick = (option) => {
-    // 1. Add the user's choice to the chat history
-    const userMessage = { sender: 'user', text: option.label };
+  const handleSendMessage = async (e, textOverride = null) => {
+    if (e) e.preventDefault();
+    const userText = textOverride || inputValue;
+    if (!userText.trim()) return;
+
+    setInputValue('');
+    setShowChips(false);
     
-    // 2. Find the bot's response using the "next" key
-    const nextNode = CHATBOT_RULES[option.next];
-    const botMessage = { sender: 'bot', text: nextNode.message };
+    // Add user message to state
+    setMessages((prev) => [...prev, { sender: 'user', text: userText }]);
+    setIsTyping(true);
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userText, pathname })
+      });
+
+      const data = await res.json();
+      
+      if (res.ok) {
+        setMessages((prev) => [...prev, { sender: 'bot', text: data.reply }]);
+      } else {
+        setMessages((prev) => [...prev, { sender: 'bot', text: "I'm sorry, I encountered an error. Please try again later." }]);
+      }
+    } catch (error) {
+      setMessages((prev) => [...prev, { sender: 'bot', text: "Network error. Please try again." }]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  const handleLeadGenSubmit = (e) => {
+    e.preventDefault();
+    if (!leadGenData.name || !leadGenData.phone) return;
     
-    // 3. Update the state with both new messages
-    setMessages((prev) => [...prev, userMessage, botMessage]);
+    // Here you would normally send this to your backend (e.g. Supabase, Email)
+    console.log("Lead captured:", leadGenData);
     
-    // 4. Update the buttons to the next set of options
-    setCurrentOptions(nextNode.options);
+    setLeadGenSubmitted(true);
+    setMessages((prev) => [...prev, { sender: 'bot', text: `Thanks ${leadGenData.name}! Our team will call you at ${leadGenData.phone} within 24 hours.` }]);
+    
+    setTimeout(() => {
+      setIsLeadGenMode(false);
+      setLeadGenSubmitted(false);
+    }, 3000);
+  };
+
+  const quickActionChips = [
+    "Tell me about the courses",
+    "What is the fee?",
+    "Speak to an expert"
+  ];
+
+  const handleChipClick = (chipText) => {
+    if (chipText === "Speak to an expert") {
+      setIsLeadGenMode(true);
+      setShowChips(false);
+    } else {
+      handleSendMessage(null, chipText);
+    }
   };
 
   return (
     <div className={styles.chatbotWrapper}>
-      {/* The Chat Window */}
       {isOpen && (
         <div className={styles.chatWindow}>
           <div className={styles.chatHeader}>
-            <span className={styles.headerTitle}>Assistant</span>
+            <div className={styles.headerTitleArea}>
+              <span className={styles.headerTitle}>Assistant</span>
+              <span className={styles.onlineStatus}></span>
+            </div>
             <button onClick={toggleChat} className={styles.closeBtn} aria-label="Close chat">×</button>
           </div>
           
@@ -60,26 +149,87 @@ export default function Chatbot() {
                 key={idx} 
                 className={`${styles.message} ${msg.sender === 'bot' ? styles.messageBot : styles.messageUser}`}
               >
-                {msg.text}
+                {msg.sender === 'bot' ? (
+                  <div className={styles.markdownContent}>
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
+                  </div>
+                ) : (
+                  msg.text
+                )}
               </div>
             ))}
+            
+            {isTyping && (
+              <div className={`${styles.message} ${styles.messageBot}`}>
+                <div className={styles.typingIndicator}>
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
+            )}
+
+            {isLeadGenMode && !leadGenSubmitted && (
+              <div className={styles.leadGenFormWrapper}>
+                <p className={styles.leadGenText}>Please provide your details so a senior engineer can contact you.</p>
+                <form onSubmit={handleLeadGenSubmit} className={styles.leadGenForm}>
+                  <input 
+                    type="text" 
+                    placeholder="Your Name" 
+                    value={leadGenData.name}
+                    onChange={(e) => setLeadGenData({...leadGenData, name: e.target.value})}
+                    required
+                    className={styles.inputField}
+                  />
+                  <input 
+                    type="tel" 
+                    placeholder="Your Phone Number" 
+                    value={leadGenData.phone}
+                    onChange={(e) => setLeadGenData({...leadGenData, phone: e.target.value})}
+                    required
+                    className={styles.inputField}
+                  />
+                  <div className={styles.leadGenActions}>
+                    <button type="button" onClick={() => setIsLeadGenMode(false)} className={styles.cancelBtn}>Cancel</button>
+                    <button type="submit" className={styles.submitBtn}>Submit</button>
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
 
-          <div className={styles.chatOptions}>
-            {currentOptions.map((opt, idx) => (
-              <button 
-                key={idx} 
-                onClick={() => handleOptionClick(opt)}
-                className={styles.optionBtn}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
+          {!isLeadGenMode && (
+            <div className={styles.chatFooter}>
+              {showChips && (
+                <div className={styles.chipsContainer}>
+                  {quickActionChips.map((chip, idx) => (
+                    <button 
+                      key={idx} 
+                      onClick={() => handleChipClick(chip)} 
+                      className={styles.actionChip}
+                    >
+                      {chip}
+                    </button>
+                  ))}
+                </div>
+              )}
+              
+              <form onSubmit={(e) => handleSendMessage(e)} className={styles.inputForm}>
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder="Type your question..."
+                  className={styles.chatInput}
+                  disabled={isTyping}
+                />
+                <button type="submit" className={styles.sendBtn} disabled={!inputValue.trim() || isTyping}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+              </form>
+            </div>
+          )}
         </div>
       )}
 
-      {/* The Floating Trigger Button */}
       <button onClick={toggleChat} className={styles.triggerBtn} aria-label="Toggle chat">
         {isOpen ? (
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>

@@ -18,13 +18,13 @@ export async function createRazorpayOrder(courseId) {
   }
 
   // Check if keys exist in env. If not, return explicit error for fallback handling.
-  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+  if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
     return { success: false, error: 'PAYMENT_GATEWAY_NOT_CONFIGURED' };
   }
 
   try {
     const instance = new Razorpay({
-      key_id: process.env.RAZORPAY_KEY_ID,
+      key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
       key_secret: process.env.RAZORPAY_KEY_SECRET,
     });
 

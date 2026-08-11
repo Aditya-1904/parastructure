@@ -237,14 +237,14 @@
    PROGRAMS / COURSES
    ============================ */
 .programsSection {
-  padding: var(--s-16) var(--s-8);
+  padding: var(--s-10) var(--s-8);
   background: var(--bg-main);
+  scroll-margin-top: calc(var(--header-height) + var(--s-4));
 }
 
 .coursesGrid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: var(--s-6);
   max-width: var(--max-width);
   margin: 0 auto;
@@ -260,7 +260,6 @@
   position: relative;
   transition: var(--transition-slow);
   width: 100%;
-  max-width: 400px;
 }
 
 .courseCard:hover {
@@ -407,7 +406,7 @@
    HOW IT WORKS
    ============================ */
 .howSection {
-  padding: var(--s-16) var(--s-8);
+  padding: var(--s-10) var(--s-8);
   background: var(--bg-surface);
 }
 
@@ -464,7 +463,7 @@
    TESTIMONIALS
    ============================ */
 .testimonialsSection {
-  padding: var(--s-16) var(--s-8);
+  padding: var(--s-10) var(--s-8);
   background: var(--bg-main);
 }
 
@@ -517,7 +516,7 @@
    FAQ
    ============================ */
 .faqSection {
-  padding: var(--s-16) var(--s-8);
+  padding: var(--s-10) var(--s-8);
   background: var(--bg-main);
 }
 
@@ -526,7 +525,7 @@
    ============================ */
 .ctaBand {
   background: var(--bg-dark);
-  padding: var(--s-16) var(--s-8);
+  padding: var(--s-10) var(--s-8);
   text-align: center;
   position: relative;
   overflow: hidden;

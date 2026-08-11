@@ -40,11 +40,11 @@ export default async function Home() {
             {userId ? (
               <>
                 <Link href="/dashboard" className="btnGold">Go to Dashboard</Link>
-                <Link href="/#programs" className="btnSecondary">Explore Programs</Link>
+                <a href="#programs" className="btnSecondary">Explore Programs</a>
               </>
             ) : (
               <>
-                <Link href="/#programs" className="btnGold">View Programs</Link>
+                <a href="#programs" className="btnGold">View Programs</a>
                 <Link href="/contact" className="btnSecondary">Get the Syllabus</Link>
               </>
             )}
@@ -77,10 +77,10 @@ export default async function Home() {
         <div className={styles.sectionHeader}>
           <span className={styles.sectionEyebrow}>What We Teach</span>
           <h2 className={styles.sectionTitle}>
-            {courses.length === 1 ? 'Our Flagship Program.' : `${courses.length} Programs.`}
+            Our Elite Programs
           </h2>
           <p className={styles.sectionSubtitle}>
-            {courses.length === 1 ? 'This program is' : 'Each program is'} built around one niche, taught live by engineers who are actively working
+            Each program is built around one niche, taught live by engineers who are actively working
             on the projects you aspire to work on.
           </p>
         </div>
@@ -209,7 +209,7 @@ export default async function Home() {
             The application takes 5 minutes. The decision could change your entire career.
           </p>
           <div className={styles.ctaButtons}>
-            <Link href="/#programs" className="btnGold">Apply Now — Free & Fast</Link>
+            <a href="#programs" className="btnGold">Apply Now — Free & Fast</a>
             <Link href="/contact" className={styles.ctaSecondaryLink}>Talk to the Team →</Link>
           </div>
         </div>

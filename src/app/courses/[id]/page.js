@@ -200,10 +200,10 @@ export default async function CoursePage({ params }) {
           <div className={styles.pricingCard}>
             <div className={styles.pricingTop} style={{ '--course-color': course.color }}>
               {isEnrolled ? (
-                <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+                <div style={{ textAlign: 'center', padding: '1rem 0', color: 'var(--text-inverted)' }}>
                   <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎉</div>
-                  <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>You own this course!</h3>
-                  <p style={{ opacity: 0.9, fontSize: '0.9rem' }}>You are fully enrolled in this program.</p>
+                  <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: 'var(--text-inverted)' }}>You own this course!</h3>
+                  <p style={{ opacity: 0.9, fontSize: '0.9rem', color: 'var(--text-inverted)' }}>You are fully enrolled in this program.</p>
                 </div>
               ) : (
                 <>

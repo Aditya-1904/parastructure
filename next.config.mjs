@@ -1,7 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverActions: {
-    bodySizeLimit: '50mb',
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '50mb',
+    },
+  },
+  async redirects() {
+    return [
+      {
+        source: '/login',
+        destination: '/sign-in',
+        permanent: true,
+      },
+      {
+        source: '/register',
+        destination: '/sign-up',
+        permanent: true,
+      }
+    ];
   },
 };
 
