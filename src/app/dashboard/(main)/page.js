@@ -65,8 +65,13 @@ export default async function DashboardPage() {
 
   // Badge Logic
   const hasFirstSteps = myCourses.length > 0;
+  const firstCourseName = hasFirstSteps ? myCourses[0].title : '';
+
   const hasActionTaker = totalSubmissions > 0;
-  const hasMasterEngineer = myCourses.some(c => c.progressPercent === 100);
+  
+  const completedCourses = myCourses.filter(c => c.progressPercent === 100);
+  const hasMasterEngineer = completedCourses.length > 0;
+  const masterCourseName = hasMasterEngineer ? completedCourses[0].title : '';
 
   // Format date for certificate
   const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -78,34 +83,6 @@ export default async function DashboardPage() {
         <p className={styles.subtitle}>Let's build something extraordinary today. Pick up where you left off below.</p>
       </section>
 
-      {/* Gamification: Badges Section */}
-      <section style={{ marginBottom: '3rem' }}>
-        <h2 className={styles.sectionTitle}>My Achievements</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-          
-          {/* Badge 1: First Steps */}
-          <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--card-border)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', opacity: hasFirstSteps ? 1 : 0.5, filter: hasFirstSteps ? 'none' : 'grayscale(100%)' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🎓</div>
-            <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>First Steps</h4>
-            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Enrolled in your first elite program.</p>
-          </div>
-
-          {/* Badge 2: Action Taker */}
-          <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--card-border)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', opacity: hasActionTaker ? 1 : 0.5, filter: hasActionTaker ? 'none' : 'grayscale(100%)' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>📝</div>
-            <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>Action Taker</h4>
-            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Submitted your first engineering assignment.</p>
-          </div>
-
-          {/* Badge 3: Master Engineer */}
-          <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--card-border)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', opacity: hasMasterEngineer ? 1 : 0.5, filter: hasMasterEngineer ? 'none' : 'grayscale(100%)' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🏆</div>
-            <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>Master Engineer</h4>
-            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Completed a program with 100% progress.</p>
-          </div>
-
-        </div>
-      </section>
 
       <section>
         <h2 className={styles.sectionTitle}>My Enrollments</h2>
@@ -161,6 +138,46 @@ export default async function DashboardPage() {
             <Link href="/#programs" className="btnGold" style={{ display: 'inline-block', width: 'auto', padding: '12px 32px' }}>Explore Programs →</Link>
           </div>
         )}
+      </section>
+      {/* Gamification: Badges Section (Compact & Repositioned) */}
+      <section style={{ marginTop: '3rem' }}>
+        <h2 className={styles.sectionTitle}>My Achievements</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+          
+          {/* Badge 1: First Steps */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--bg-surface)', border: '1px solid var(--card-border)', padding: '1rem', borderRadius: '12px', flex: '1 1 280px', opacity: hasFirstSteps ? 1 : 0.5, filter: hasFirstSteps ? 'none' : 'grayscale(100%)' }}>
+            <div style={{ fontSize: '2rem' }}>🎓</div>
+            <div>
+              <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>First Steps</h4>
+              <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                {hasFirstSteps ? `Enrolled in ${firstCourseName}.` : 'Enroll in your first elite program.'}
+              </p>
+            </div>
+          </div>
+
+          {/* Badge 2: Action Taker */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--bg-surface)', border: '1px solid var(--card-border)', padding: '1rem', borderRadius: '12px', flex: '1 1 280px', opacity: hasActionTaker ? 1 : 0.5, filter: hasActionTaker ? 'none' : 'grayscale(100%)' }}>
+            <div style={{ fontSize: '2rem' }}>📝</div>
+            <div>
+              <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>Action Taker</h4>
+              <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                {hasActionTaker ? 'Submitted your first assignment.' : 'Submit your first assignment.'}
+              </p>
+            </div>
+          </div>
+
+          {/* Badge 3: Master Engineer */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--bg-surface)', border: '1px solid var(--card-border)', padding: '1rem', borderRadius: '12px', flex: '1 1 280px', opacity: hasMasterEngineer ? 1 : 0.5, filter: hasMasterEngineer ? 'none' : 'grayscale(100%)' }}>
+            <div style={{ fontSize: '2rem' }}>🏆</div>
+            <div>
+              <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>Master Engineer</h4>
+              <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                {hasMasterEngineer ? `Hit 100% progress in ${masterCourseName}.` : 'Hit 100% progress in any program.'}
+              </p>
+            </div>
+          </div>
+
+        </div>
       </section>
     </>
   );
