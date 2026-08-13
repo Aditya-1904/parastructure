@@ -11,6 +11,7 @@ export default async function DashboardPage() {
 
   let myCourses = [];
   let totalSubmissions = 0;
+  let totalCompletedLectures = 0;
 
   // Try to fetch real enrollments from Supabase
   const { data: enrollments, error } = await supabase
@@ -54,6 +55,7 @@ export default async function DashboardPage() {
         const courseSubmissions = (allSubmissions || []).filter(sub => courseModuleIds.includes(sub.module_id)).length;
 
         completedCount = completedLectures + courseSubmissions;
+        totalCompletedLectures += completedLectures;
       }
 
       const progressPercent = totalModules > 0 ? Math.min(100, Math.round((completedCount / totalModules) * 100)) : 0;
@@ -63,15 +65,23 @@ export default async function DashboardPage() {
   );
   myCourses = mappedCourses.filter(Boolean);
 
-  // Badge Logic
-  const hasFirstSteps = myCourses.length > 0;
-  const firstCourseName = hasFirstSteps ? myCourses[0].title : '';
+  // Gamification: XP and Level Calculation
+  const totalXP = (totalCompletedLectures * 100) + (totalSubmissions * 200);
+  let currentLevel = 1;
+  let levelName = 'Junior Engineer';
+  let nextLevelXP = 500;
 
-  const hasActionTaker = totalSubmissions > 0;
+  if (totalXP >= 5000) {
+    currentLevel = 5; levelName = 'Principal Engineer'; nextLevelXP = 10000;
+  } else if (totalXP >= 2000) {
+    currentLevel = 4; levelName = 'Senior Engineer'; nextLevelXP = 5000;
+  } else if (totalXP >= 1000) {
+    currentLevel = 3; levelName = 'Project Engineer'; nextLevelXP = 2000;
+  } else if (totalXP >= 500) {
+    currentLevel = 2; levelName = 'Bridge Engineer'; nextLevelXP = 1000;
+  }
   
-  const completedCourses = myCourses.filter(c => c.progressPercent === 100);
-  const hasMasterEngineer = completedCourses.length > 0;
-  const masterCourseName = hasMasterEngineer ? completedCourses[0].title : '';
+  const levelProgress = Math.min(100, (totalXP / nextLevelXP) * 100);
 
   // Format date for certificate
   const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -79,11 +89,17 @@ export default async function DashboardPage() {
   return (
     <>
       <section className={styles.welcomeSection}>
-        <h1 className={styles.greeting}>Welcome back, {user?.firstName || 'Engineer'} 🚀</h1>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '0.5rem' }}>
+          <h1 className={styles.greeting} style={{ marginBottom: 0 }}>Welcome back, {user?.firstName || 'Engineer'} 🚀</h1>
+          
+          {process.env.NEXT_PUBLIC_ENABLE_GAMIFICATION === 'true' && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-surface)', padding: '0.5rem 1rem', borderRadius: 'var(--r-full)', border: '1px solid var(--card-border)', fontSize: '0.9rem', fontWeight: 600, color: 'var(--accent-gold)' }}>
+              <span>🌟</span> {totalXP} XP
+            </div>
+          )}
+        </div>
         <p className={styles.subtitle}>Let's build something extraordinary today. Pick up where you left off below.</p>
       </section>
-
-
       <section>
         <h2 className={styles.sectionTitle}>My Enrollments</h2>
         
@@ -113,6 +129,7 @@ export default async function DashboardPage() {
                       <Link href={`/dashboard/learn/${course.id}`} className="btnGold" style={{ textAlign: 'center', display: 'block' }}>
                         Access Course Portal
                       </Link>
+
                       {course.progressPercent === 100 && (
                         <CertificateButton 
                           studentName={`${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Engineer'}
@@ -138,46 +155,6 @@ export default async function DashboardPage() {
             <Link href="/#programs" className="btnGold" style={{ display: 'inline-block', width: 'auto', padding: '12px 32px' }}>Explore Programs →</Link>
           </div>
         )}
-      </section>
-      {/* Gamification: Badges Section (Compact & Repositioned) */}
-      <section style={{ marginTop: '3rem' }}>
-        <h2 className={styles.sectionTitle}>My Achievements</h2>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-          
-          {/* Badge 1: First Steps */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--bg-surface)', border: '1px solid var(--card-border)', padding: '1rem', borderRadius: '12px', flex: '1 1 280px', opacity: hasFirstSteps ? 1 : 0.5, filter: hasFirstSteps ? 'none' : 'grayscale(100%)' }}>
-            <div style={{ fontSize: '2rem' }}>🎓</div>
-            <div>
-              <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>First Steps</h4>
-              <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                {hasFirstSteps ? `Enrolled in ${firstCourseName}.` : 'Enroll in your first elite program.'}
-              </p>
-            </div>
-          </div>
-
-          {/* Badge 2: Action Taker */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--bg-surface)', border: '1px solid var(--card-border)', padding: '1rem', borderRadius: '12px', flex: '1 1 280px', opacity: hasActionTaker ? 1 : 0.5, filter: hasActionTaker ? 'none' : 'grayscale(100%)' }}>
-            <div style={{ fontSize: '2rem' }}>📝</div>
-            <div>
-              <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>Action Taker</h4>
-              <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                {hasActionTaker ? 'Submitted your first assignment.' : 'Submit your first assignment.'}
-              </p>
-            </div>
-          </div>
-
-          {/* Badge 3: Master Engineer */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--bg-surface)', border: '1px solid var(--card-border)', padding: '1rem', borderRadius: '12px', flex: '1 1 280px', opacity: hasMasterEngineer ? 1 : 0.5, filter: hasMasterEngineer ? 'none' : 'grayscale(100%)' }}>
-            <div style={{ fontSize: '2rem' }}>🏆</div>
-            <div>
-              <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>Master Engineer</h4>
-              <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                {hasMasterEngineer ? `Hit 100% progress in ${masterCourseName}.` : 'Hit 100% progress in any program.'}
-              </p>
-            </div>
-          </div>
-
-        </div>
       </section>
     </>
   );

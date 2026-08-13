@@ -12,12 +12,29 @@ import { formatDisplayDate } from '@/utils/moduleHelpers';
 export default function LearnPortalClient({ course, schedule, initialModuleId, initialTab, userId, userName, isAdmin, completedModules }) {
   const router = useRouter();
   
+  // Auto-complete past lectures based on date
+  const processedSchedule = schedule.map(item => {
+    let computedStatus = item.status;
+    if (computedStatus !== 'completed' && item.date_string) {
+      const datePart = item.date_string.split('|')[0].trim();
+      const itemDate = new Date(datePart);
+      if (!isNaN(itemDate.getTime())) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (itemDate < today) {
+          computedStatus = 'completed';
+        }
+      }
+    }
+    return { ...item, status: computedStatus };
+  });
+
   const [activeModuleId, setActiveModuleId] = useState(
-    initialModuleId || (schedule.length > 0 ? (schedule.find(m => m.status === 'upcoming')?.id || schedule[0].id) : null)
+    initialModuleId || (processedSchedule.length > 0 ? (processedSchedule.find(m => m.status === 'upcoming')?.id || processedSchedule[0].id) : null)
   );
   const [activeTab, setActiveTab] = useState(initialTab || 'lecture');
 
-  const activeModule = schedule.find(m => m.id === activeModuleId);
+  const activeModule = processedSchedule.find(m => m.id === activeModuleId);
 
   // Sync URL shallowly without reloading the page
   const updateUrl = (moduleId, tab) => {
@@ -51,7 +68,7 @@ export default function LearnPortalClient({ course, schedule, initialModuleId, i
         </div>
         
         <div className={styles.calendarList}>
-          {schedule.map((item, idx) => {
+          {processedSchedule.map((item, idx) => {
             const isActive = activeModule?.id === item.id;
             const dateStr = item.date_string ? (isNaN(new Date(item.date_string).getTime()) ? item.date_string.split('|')[0].trim() : new Date(item.date_string).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })) : 'TBA';
             return (
@@ -65,7 +82,7 @@ export default function LearnPortalClient({ course, schedule, initialModuleId, i
                     {item.title}
                   </span>
                   <span className={styles.calIcon}>
-                    {item.status === 'completed' && '✔️'}
+                    {item.status === 'completed' && <span style={{ color: '#4ade80', fontSize: '1.2rem' }}>☑️</span>}
                     {item.status === 'upcoming' && '🔓'}
                     {item.status === 'locked' && '🔒'}
                   </span>
@@ -73,7 +90,7 @@ export default function LearnPortalClient({ course, schedule, initialModuleId, i
               </a>
             );
           })}
-          {schedule.length === 0 && (
+          {processedSchedule.length === 0 && (
             <div style={{ padding: '1rem', color: 'var(--text-tertiary)', textAlign: 'center', fontSize: '0.875rem' }}>
               No modules published yet.
             </div>
@@ -119,10 +136,10 @@ export default function LearnPortalClient({ course, schedule, initialModuleId, i
                   </p>
                   
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    {schedule.filter(m => m.resource_link).length === 0 ? (
+                    {processedSchedule.filter(m => m.resource_link).length === 0 ? (
                       <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-tertiary)' }}>No resources have been uploaded for this course yet.</div>
                     ) : (
-                      schedule.filter(m => m.resource_link).map(m => (
+                      processedSchedule.filter(m => m.resource_link).map(m => (
                         <div key={m.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-main)', padding: '1rem 1.5rem', borderRadius: '8px', border: '1px solid var(--card-border)' }}>
                           <div>
                             <strong style={{ color: 'var(--text-primary)', display: 'block', marginBottom: '4px' }}>{m.title}</strong>
@@ -153,9 +170,15 @@ export default function LearnPortalClient({ course, schedule, initialModuleId, i
                   <div className={styles.detailsSide}>
                     <div className={styles.lectureHeader}>
                       <h2 className={styles.lectureTitle}>{activeModule.title}</h2>
-                      <span className={styles.upcomingBadge} style={{ background: activeModule.status === 'completed' ? 'rgba(74, 222, 128, 0.1)' : '', color: activeModule.status === 'completed' ? '#4ade80' : '' }}>
-                        {activeModule.status}
-                      </span>
+                      {activeModule.status === 'completed' ? (
+                        <span className={styles.upcomingBadge} style={{ background: 'rgba(74, 222, 128, 0.1)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.2)' }}>
+                          ☑️ Completed
+                        </span>
+                      ) : (
+                        <span className={styles.upcomingBadge}>
+                          {activeModule.status}
+                        </span>
+                      )}
                     </div>
                     <p className={styles.lectureDate}>📅 {formatDisplayDate(activeModule.date_string)}</p>
                     
@@ -186,7 +209,7 @@ export default function LearnPortalClient({ course, schedule, initialModuleId, i
                             </a>
                           )}
                           {activeModule.status === 'completed' && activeModule.recording_link && (
-                            <a href={activeModule.recording_link} target="_blank" rel="noopener noreferrer" className={`btnGold ${styles.joinBtn}`}>
+                            <a href={activeModule.recording_link} target="_blank" rel="noopener noreferrer" className={`btnGold ${styles.joinBtn}`} style={{ background: 'var(--bg-surface-2)', color: 'var(--accent-gold)', border: '1px solid var(--accent-gold)' }}>
                               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><circle cx="12" cy="12" r="10"/></svg>
                               Watch Recording
                             </a>
@@ -197,8 +220,10 @@ export default function LearnPortalClient({ course, schedule, initialModuleId, i
                               Download Resource
                             </a>
                           )}
-                          {activeModule.status !== 'upcoming' && !activeModule.recording_link && (
-                            <span style={{ color: 'var(--text-tertiary)' }}>No link available yet.</span>
+                          {activeModule.status === 'completed' && !activeModule.recording_link && (
+                            <div style={{ padding: '10px 16px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '8px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem' }}>
+                              <span>⏳</span> Recording is being processed and will be uploaded shortly.
+                            </div>
                           )}
                         </>
                       )}
