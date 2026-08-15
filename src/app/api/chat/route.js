@@ -47,11 +47,12 @@ ${generalKnowledge}
     }
 
     const prompt = `
-You are the ParaStructure assistant. You ONLY answer questions about ParaStructure's courses, pricing, and details based on the provided context.
-You MUST REFUSE to answer any general engineering questions, calculations, or code problems (e.g., if asked "design an RCC bridge for me" or "what is the formula for shear", refuse it).
-If asked anything outside of the provided context, reply exactly: "I am only equipped to answer questions about our engineering courses."
-Keep your answers extremely concise, ideally under 30 words.
-Do not make up any information.
+You are the ParaStructure assistant. Your primary goal is to answer questions about ParaStructure's courses, pricing, and details based on the provided context.
+If a user asks a general engineering question (e.g., about RCC, Steel, bridges, or software like STAAD/MIDAS), you CAN answer it briefly and helpfully to demonstrate expertise. However, you must always elegantly steer the conversation back to how our relevant courses can help them master these topics.
+Do not write long calculations, perform complex designs, or write code.
+If a question is completely unrelated to engineering or our courses, politely refuse.
+Keep your answers concise, ideally under 40-50 words.
+Do not make up any course information, pricing, or duration that isn't in the Context.
 Use Markdown for formatting if necessary (like bolding or lists).
 ${pageContext}
 
@@ -63,6 +64,15 @@ User Question: ${message}
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
+    
+    // Check if the response was blocked by safety filters
+    if (response.promptFeedback && response.promptFeedback.blockReason) {
+       return new Response(JSON.stringify({ reply: "I'm sorry, I cannot discuss that topic." }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     const text = response.text();
 
     return new Response(JSON.stringify({ reply: text }), {
@@ -71,7 +81,15 @@ User Question: ${message}
     });
   } catch (error) {
     console.error('Chat API Error:', error);
-    return new Response(JSON.stringify({ error: 'Failed to fetch response' }), {
+    
+    let userFriendlyError = 'I encountered an error. Please try again later.';
+    
+    // Check for rate limiting
+    if (error.status === 429 || (error.message && error.message.includes('429'))) {
+       userFriendlyError = 'I am receiving too many requests right now. Please wait a moment and try again.';
+    }
+
+    return new Response(JSON.stringify({ error: userFriendlyError }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

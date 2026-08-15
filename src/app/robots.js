@@ -1,12 +1,10 @@
 export default function robots() {
-  const baseUrl = 'https://www.parastructure.com';
-
   return {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/'],
+      disallow: ['/dashboard/', '/api/', '/checkout/'],
     },
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: 'https://parastructure.in/sitemap.xml',
   };
 }

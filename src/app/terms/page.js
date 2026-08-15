@@ -1,37 +1,36 @@
-import styles from '../legal.module.css';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import styles from '@/app/legal.module.css';
 
-export const metadata = {
-  title: 'Terms of Service | Parastructure',
-  description: 'Terms of Service for Parastructure',
-};
-
-export default function TermsOfService() {
+export default function TermsPage() {
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Terms of Service</h1>
-      <div className={styles.content}>
-        <p>Last updated: {new Date().toLocaleDateString()}</p>
-        
-        <h2>1. Acceptance of Terms</h2>
-        <p>
-          By accessing and using Parastructure's services, you accept and agree to be bound by the terms and provision of this agreement.
-        </p>
-
-        <h2>2. Educational Services</h2>
-        <p>
-          Parastructure provides cohort-based bridge engineering programs. We reserve the right to modify, suspend or discontinue the service with or without notice at any time and without any liability to you.
-        </p>
-
-        <h2>3. User Conduct</h2>
-        <p>
-          You agree to use our services only for lawful purposes. You are prohibited from sharing access to your account, distributing course materials without permission, or engaging in any behavior that disrupts the learning experience of others.
-        </p>
-
-        <h2>4. Intellectual Property</h2>
-        <p>
-          All content, including but not limited to videos, assignments, and study materials, are the intellectual property of Parastructure and are protected by copyright laws.
-        </p>
-      </div>
-    </div>
+    <>
+      <Header />
+      <main className={styles.container}>
+        <h1 className={styles.title}>Terms & Conditions</h1>
+        <div className={styles.content}>
+          <p>Last updated: August 15, 2026</p>
+          
+          <h2>1. Introduction</h2>
+          <p>Welcome to Parastructure. By accessing our website and enrolling in our programs, you agree to be bound by these Terms and Conditions.</p>
+          
+          <h2>2. Intellectual Property</h2>
+          <p>All content provided in our courses, including videos, PDFs, assignments, and curriculum structures, are the exclusive intellectual property of Parastructure Pvt. Ltd. You may not distribute, reproduce, or resell any course materials.</p>
+          
+          <h2>3. User Accounts</h2>
+          <p>To access the course portal, you must register for an account. You are responsible for maintaining the confidentiality of your account credentials. Sharing account access with non-enrolled individuals will result in immediate termination of your account without a refund.</p>
+          
+          <h2>4. Payments</h2>
+          <p>All payments are processed securely through Razorpay. By purchasing a course, you agree to provide valid payment information.</p>
+          
+          <h2>5. Course Access</h2>
+          <p>Lifetime access (where applicable) refers to the lifetime of the platform. We reserve the right to modify or discontinue programs with reasonable prior notice to enrolled students.</p>
+          
+          <h2>6. Limitation of Liability</h2>
+          <p>Our programs are educational in nature. Parastructure is not liable for any structural failures or professional liability claims arising from the application of concepts taught in our courses. You must always adhere to local engineering codes and professional standards.</p>
+        </div>
+      </main>
+      <Footer />
+    </>
   );
 }

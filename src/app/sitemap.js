@@ -1,32 +1,39 @@
-import { getAllCourses } from '@/data/courses';
+export default function sitemap() {
+  const baseUrl = 'https://parastructure.in';
 
-export default async function sitemap() {
-  const baseUrl = 'https://parastructure.com';
-
-  // Get all dynamically published courses
-  const courses = await getAllCourses();
-  
-  const courseUrls = courses.map((course) => ({
-    url: `${baseUrl}/courses/${course.id}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.8,
-  }));
-
-  const staticUrls = [
+  // In a real app, you might fetch all courses from your DB here and map them.
+  // For now, we'll manually list the core public pages.
+  return [
     {
       url: baseUrl,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 1.0,
+      priority: 1,
     },
     {
       url: `${baseUrl}/contact`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
       priority: 0.5,
     },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/refund`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.5,
+    },
+    // We would map over courses here, e.g. /courses/123
   ];
-
-  return [...staticUrls, ...courseUrls];
 }

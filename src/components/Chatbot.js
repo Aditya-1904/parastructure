@@ -91,7 +91,8 @@ export default function Chatbot() {
       if (res.ok) {
         setMessages((prev) => [...prev, { sender: 'bot', text: data.reply }]);
       } else {
-        setMessages((prev) => [...prev, { sender: 'bot', text: "I'm sorry, I encountered an error. Please try again later." }]);
+        const errorText = data.error || "I'm sorry, I encountered an error. Please try again later.";
+        setMessages((prev) => [...prev, { sender: 'bot', text: errorText }]);
       }
     } catch (error) {
       setMessages((prev) => [...prev, { sender: 'bot', text: "Network error. Please try again." }]);

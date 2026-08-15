@@ -1,5 +1,6 @@
 import styles from './contact.module.css';
 import { getAllCourses } from '@/data/courses';
+import { SITE_CONFIG } from '@/config/site';
 
 export default async function ContactPage() {
   const courses = await getAllCourses();
@@ -18,11 +19,11 @@ export default async function ContactPage() {
           <div className={styles.infoBlocks}>
             <div className={styles.infoBlock}>
               <h3>Admissions & Queries</h3>
-              <p>admissions@parastructure.com</p>
+              <p>{SITE_CONFIG.contact.email}</p>
             </div>
             <div className={styles.infoBlock}>
               <h3>Direct WhatsApp / Call</h3>
-              <p>+91 98765 43210</p>
+              <p>{SITE_CONFIG.contact.phoneDisplay}</p>
             </div>
           </div>
         </div>

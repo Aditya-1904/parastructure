@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './components.module.css';
 import { getAllCourses } from '@/data/courses';
+import { SITE_CONFIG } from '@/config/site';
 
 import { useState, useEffect } from 'react';
 
@@ -74,16 +75,16 @@ export default function Footer() {
           <div className={styles.linkGroup}>
             <h4 className={styles.linkGroupTitle}>Contact</h4>
             <ul>
-              <li><a href="mailto:admissions@parastructure.com">admissions@parastructure.com</a></li>
-              <li><a href="tel:+918001234567">+91 (800) 123-4567</a></li>
-              <li>New Delhi, India</li>
+              <li><a href={`mailto:${SITE_CONFIG.contact.email}`}>{SITE_CONFIG.contact.email}</a></li>
+              <li><a href={`tel:${SITE_CONFIG.contact.phoneLink}`}>{SITE_CONFIG.contact.phoneDisplay}</a></li>
+              <li>{SITE_CONFIG.contact.address}</li>
             </ul>
           </div>
         </div>
       </div>
 
       <div className={styles.footerBottom}>
-        <p>© {year} Parastructure Pvt. Ltd. All rights reserved.</p>
+        <p>© {year} {SITE_CONFIG.company.name} All rights reserved.</p>
         <div className={styles.footerLegal}>
           <Link href="/privacy">Privacy Policy</Link>
           <Link href="/terms">Terms of Service</Link>
@@ -93,3 +94,4 @@ export default function Footer() {
     </footer>
   );
 }
+
