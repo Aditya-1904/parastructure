@@ -121,6 +121,43 @@
   opacity: 0.9;
 }
 
+.revokeBtn {
+  background: transparent;
+  color: #ff4757;
+  border: 1px solid #ff4757;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  transition: all 0.2s;
+}
+
+.revokeBtn:hover {
+  background: rgba(255, 71, 87, 0.1);
+}
+
+.deleteBtn {
+  background: #ff4757;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  transition: all 0.2s;
+}
+
+.deleteBtn:hover {
+  background: #e84118;
+}
+
+.revoked {
+  background: rgba(255, 71, 87, 0.1);
+  color: #ff4757;
+}
+
 .emptyState {
   text-align: center;
   color: var(--text-tertiary);
