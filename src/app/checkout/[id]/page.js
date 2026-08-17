@@ -14,7 +14,7 @@ export default function CheckoutPage({ params }) {
   const { id: courseId } = use(params);
   const { isLoaded, isSignedIn, user } = useUser();
   const [course, setCourse] = useState(null);
-  const [form, setForm] = useState({ name: '', email: '', phone: '', linkedin: '' });
+  const [form, setForm] = useState({ name: '', email: '', linkedin: '' });
   const [loading, setLoading] = useState(false);
   const [showFallback, setShowFallback] = useState(false);
   const [errors, setErrors] = useState({});
@@ -59,7 +59,7 @@ export default function CheckoutPage({ params }) {
 
   function validate() {
     const errs = {};
-    if (!form.phone.trim() || !/^\+?[0-9]{10,13}$/.test(form.phone.replace(/\s/g, ''))) errs.phone = 'Enter a valid 10-digit phone number.';
+    // No custom phone validation required since Razorpay handles it
     return errs;
   }
 
@@ -106,7 +106,7 @@ export default function CheckoutPage({ params }) {
       prefill: {
         name: form.name,
         email: form.email,
-        contact: form.phone,
+        // contact omitted so Razorpay automatically prompts the user for their phone number securely
       },
       notes: {
         course: course.id,
@@ -220,7 +220,7 @@ export default function CheckoutPage({ params }) {
             </div>
 
             <div className={styles.formRow}>
-              <div className={styles.formGroup}>
+              <div className={styles.formGroup} style={{ width: '100%' }}>
                 <label htmlFor="email" className={styles.label}>Email Address (From Profile) *</label>
                 <input
                   id="email"
@@ -231,20 +231,6 @@ export default function CheckoutPage({ params }) {
                   disabled
                   style={{ opacity: 0.7, cursor: 'not-allowed', background: 'rgba(255,255,255,0.05)' }}
                 />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="phone" className={styles.label}>Phone Number *</label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  className={`${styles.input} ${errors.phone ? styles.inputError : ''}`}
-                  placeholder="+91 98765 43210"
-                  value={form.phone}
-                  onChange={handleChange}
-                />
-                {errors.phone && <span className={styles.errorMsg}>{errors.phone}</span>}
               </div>
             </div>
 

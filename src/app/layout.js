@@ -1,5 +1,7 @@
 import { Outfit, Inter } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs'
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
 import Header from "@/components/Header";
 import Chatbot from "@/components/Chatbot";
@@ -71,8 +73,6 @@ export const metadata = {
       'max-snippet': -1,
     },
   },
-
-
 };
 
 export default function RootLayout({ children }) {
@@ -84,6 +84,8 @@ export default function RootLayout({ children }) {
           <main style={{ flexGrow: 1 }}>{children}</main>
           <Chatbot />
           <Footer />
+          <Analytics />
+          <SpeedInsights />
         </body>
       </html>
     </ClerkProvider>
