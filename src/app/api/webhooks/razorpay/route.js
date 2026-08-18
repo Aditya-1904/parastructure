@@ -75,6 +75,34 @@ export async function POST(request) {
           return NextResponse.json({ error: 'Database error' }, { status: 500 });
         }
         console.log(`Successfully enrolled user ${userId} in course ${courseId}`);
+
+        // Try to fetch user details to send the welcome email
+        try {
+          const { getCourse } = await import('@/data/courses');
+          const { sendWelcomeEmail } = await import('@/lib/email');
+          const course = await getCourse(courseId);
+          
+          // Since Clerk webhooks aren't in this route, we need to fetch user email via Clerk backend API
+          // We can do this gracefully:
+          const { clerkClient } = await import('@clerk/nextjs/server');
+          const user = await clerkClient.users.getUser(userId);
+          const email = user.emailAddresses[0]?.emailAddress;
+          const name = user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : 'Student';
+
+          if (email && course) {
+            await sendWelcomeEmail({
+              toEmail: email,
+              studentName: name,
+              courseTitle: course.title,
+              courseId: course.id,
+              amountPaid: amount
+            });
+            console.log(`Welcome email sent to ${email}`);
+          }
+        } catch (emailErr) {
+          console.error("Failed to send welcome email in webhook:", emailErr);
+          // We don't return 500 here because the enrollment was successful
+        }
       } else {
         console.log(`User ${userId} already enrolled in course ${courseId}. Updating payment_id if necessary.`);
       }

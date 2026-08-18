@@ -59,10 +59,9 @@ export async function checkEnrollmentStatus(courseId) {
   }
 }
 
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
-
 export async function temporaryDirectEnroll(courseId, paymentId, amount) {
-  const { userId } = await auth();
+  const user = await currentUser();
+  const userId = user?.id;
   if (!userId) return { success: false, error: 'Not logged in' };
 
   try {
@@ -84,6 +83,28 @@ export async function temporaryDirectEnroll(courseId, paymentId, amount) {
         return { success: true }; // Already enrolled
       }
       throw error;
+    }
+
+    // Send the welcome email immediately via Server Action
+    try {
+      const { getCourse } = await import('@/data/courses');
+      const { sendWelcomeEmail } = await import('@/lib/email');
+      const course = await getCourse(courseId);
+      
+      const email = user.emailAddresses[0]?.emailAddress;
+      const name = user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : 'Student';
+
+      if (email && course) {
+        await sendWelcomeEmail({
+          toEmail: email,
+          studentName: name,
+          courseTitle: course.title,
+          courseId: course.id,
+          amountPaid: amount
+        });
+      }
+    } catch (emailErr) {
+      console.error("Failed to send welcome email in direct enroll:", emailErr);
     }
 
     revalidatePath('/', 'layout');

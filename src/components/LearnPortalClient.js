@@ -168,6 +168,36 @@ export default function LearnPortalClient({ course, schedule, initialModuleId, i
 
                   {/* Lecture Details side */}
                   <div className={styles.detailsSide}>
+                    {/* Embedded Video Player */}
+                    {activeModule.status === 'completed' && activeModule.recording_link && activeModule.recording_link.includes('youtube.com') && (
+                      <div style={{ marginBottom: '1.5rem', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--card-border)', background: '#000', aspectRatio: '16/9' }}>
+                        <iframe 
+                          width="100%" 
+                          height="100%" 
+                          src={`https://www.youtube.com/embed/${new URL(activeModule.recording_link).searchParams.get('v') || activeModule.recording_link.split('v=')[1]?.split('&')[0]}`} 
+                          title="Course Video Player" 
+                          frameBorder="0" 
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                          allowFullScreen
+                          style={{ display: 'block' }}
+                        ></iframe>
+                      </div>
+                    )}
+                    {activeModule.status === 'completed' && activeModule.recording_link && activeModule.recording_link.includes('youtu.be') && (
+                      <div style={{ marginBottom: '1.5rem', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--card-border)', background: '#000', aspectRatio: '16/9' }}>
+                        <iframe 
+                          width="100%" 
+                          height="100%" 
+                          src={`https://www.youtube.com/embed/${activeModule.recording_link.split('youtu.be/')[1]?.split('?')[0]}`} 
+                          title="Course Video Player" 
+                          frameBorder="0" 
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                          allowFullScreen
+                          style={{ display: 'block' }}
+                        ></iframe>
+                      </div>
+                    )}
+
                     <div className={styles.lectureHeader}>
                       <h2 className={styles.lectureTitle}>{activeModule.title}</h2>
                       {activeModule.status === 'completed' ? (

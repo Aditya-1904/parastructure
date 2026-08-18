@@ -219,19 +219,17 @@ export default function CheckoutPage({ params }) {
               />
             </div>
 
-            <div className={styles.formRow}>
-              <div className={styles.formGroup} style={{ width: '100%' }}>
-                <label htmlFor="email" className={styles.label}>Email Address (From Profile) *</label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  className={`${styles.input}`}
-                  value={form.email}
-                  disabled
-                  style={{ opacity: 0.7, cursor: 'not-allowed', background: 'rgba(255,255,255,0.05)' }}
-                />
-              </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="email" className={styles.label}>Email Address (From Profile) *</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                className={`${styles.input}`}
+                value={form.email}
+                disabled
+                style={{ opacity: 0.7, cursor: 'not-allowed', background: 'rgba(255,255,255,0.05)' }}
+              />
             </div>
 
             <div className={styles.formGroup}>
