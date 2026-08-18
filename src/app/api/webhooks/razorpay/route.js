@@ -83,9 +83,9 @@ export async function POST(request) {
           const course = await getCourse(courseId);
           
           // Since Clerk webhooks aren't in this route, we need to fetch user email via Clerk backend API
-          // We can do this gracefully:
           const { clerkClient } = await import('@clerk/nextjs/server');
-          const user = await clerkClient.users.getUser(userId);
+          const client = await clerkClient();
+          const user = await client.users.getUser(userId);
           const email = user.emailAddresses[0]?.emailAddress;
           const name = user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : 'Student';
 

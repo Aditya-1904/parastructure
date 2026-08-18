@@ -1,7 +1,8 @@
 'use server';
 
 import { supabase } from '@/lib/supabase';
-import { auth } from '@clerk/nextjs/server';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 
 export async function enrollUserInCourse(courseId, paymentId, paymentMethod, amount) {
